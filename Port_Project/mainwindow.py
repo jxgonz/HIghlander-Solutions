@@ -21,9 +21,6 @@ class Ui_MainWindow(object):
         self.pushButton_uploadManifest = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_uploadManifest.setGeometry(QtCore.QRect(330, 380, 141, 61))
         self.pushButton_uploadManifest.setObjectName("pushButton_uploadManifest")
-        self.pushButton_Login_MainWindow = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_Login_MainWindow.setGeometry(QtCore.QRect(710, 10, 81, 41))
-        self.pushButton_Login_MainWindow.setObjectName("pushButton_Login_MainWindow")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(0, 150, 801, 91))
         font = QtGui.QFont()
@@ -44,24 +41,20 @@ class Ui_MainWindow(object):
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 803, 22))
         self.menubar.setObjectName("menubar")
+        self.menuLogin = QtWidgets.QMenu(self.menubar)
+        self.menuLogin.setObjectName("menuLogin")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.menubar.addAction(self.menuLogin.menuAction())
         self.LoginWindow = None # Set login window to none to show it has not been open yet
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        self.pushButton_Login_MainWindow.clicked.connect(self.show_login_window)
         self.pushButton_uploadManifest.clicked.connect(self.upload_manifest)
-
-    def show_login_window(self):
-        if self.LoginWindow is None:
-            self.LoginWindow = QtWidgets.QDialog()
-            ui = Ui_Dialog_LoginPage()
-            ui.setupUi(self.LoginWindow)
-            self.LoginWindow.show()
+        self.menuLogin.aboutToShow.connect(self.show_login_window)
 
     def upload_manifest(self):
         name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', options=QtWidgets.QFileDialog.DontUseNativeDialog)
@@ -70,13 +63,20 @@ class Ui_MainWindow(object):
             manifest_data = file.read()
         print(manifest_data)
 
+    def show_login_window(self):
+        if self.LoginWindow is None:
+            self.LoginWindow = QtWidgets.QDialog()
+            ui = Ui_Dialog_LoginPage()
+            ui.setupUi(self.LoginWindow)
+            self.LoginWindow.show()
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton_uploadManifest.setText(_translate("MainWindow", "Upload Manifest"))
-        self.pushButton_Login_MainWindow.setText(_translate("MainWindow", "Login"))
         self.label.setText(_translate("MainWindow", "Long Beach Port"))
         self.label_2.setText(_translate("MainWindow", "Container Moving Software (CMS)"))
+        self.menuLogin.setTitle(_translate("MainWindow", "Login"))
 
 
 if __name__ == "__main__":
