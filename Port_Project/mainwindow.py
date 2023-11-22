@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from login import Ui_Dialog_LoginPage
+import re
 
 
 class Ui_MainWindow(object):
@@ -57,11 +58,30 @@ class Ui_MainWindow(object):
         self.menuLogin.aboutToShow.connect(self.show_login_window)
 
     def upload_manifest(self):
+
         name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', options=QtWidgets.QFileDialog.DontUseNativeDialog)
         file = open(name, 'r')
-        with file:
-            manifest_data = file.read()
-        print(manifest_data)
+        x_coords, y_coords, weights, container_names = [], [], [], []
+
+        for line in file:
+            # Remove trailed newline character and brackets/paraenthesis from each line
+            line = re.sub(r"[\([{})\]]", "", line)
+            line = line.rstrip('\n')
+            # Save x coordinate from current line and save rest of line in extra variable
+            x, extra = line.lstrip().split(',', 1)
+            # Save y coordinate current current line and save rest of line in extra variable
+            y, extra = extra.lstrip().split(',', 1)
+            # Save weight current current line and save rest of line in extra variable
+            weight, extra = extra.lstrip().split(',', 1)
+            # Save container name current line
+            cont_name = extra.lstrip().split(',', 1)
+
+            # Append values from current line to list
+            x_coords.append(x)
+            y_coords.append(y)
+            weights. append(weight)
+            container_names.append(cont_name)
+        print(container_names)
 
     def show_login_window(self):
         if self.LoginWindow is None:
