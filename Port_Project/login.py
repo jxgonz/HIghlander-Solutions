@@ -9,12 +9,25 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QDialog
 
-class Ui_Dialog_LoginPage(object):
-    def setupUi(self, Dialog_LoginPage):
-        Dialog_LoginPage.setObjectName("Dialog_LoginPage")
-        Dialog_LoginPage.resize(487, 320)
-        self.label = QtWidgets.QLabel(Dialog_LoginPage)
+class Ui_Dialog_LoginPage(QDialog):
+    def __init__(self):
+        super(Ui_Dialog_LoginPage,self).__init__()
+        self.setObjectName("Dialog_LoginPage")
+        self.resize(487, 320)
+        self.setWindowTitle("Dialog_LoginPage")
+
+        self.setupUi()
+
+    def setupUi(self):
+        #Dialog_LoginPage.setObjectName("Dialog_LoginPage")
+        #Dialog_LoginPage.resize(487, 320)
+        self.secondarywidget = QtWidgets.QWidget()
+        self.secondarywidget.setObjectName("secondarywidget")
+
+        #Label 1
+        self.label = QtWidgets.QLabel(self)
         self.label.setGeometry(QtCore.QRect(0, 30, 491, 61))
         font = QtGui.QFont()
         font.setPointSize(25)
@@ -22,26 +35,50 @@ class Ui_Dialog_LoginPage(object):
         self.label.setFont(font)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
-        self.label_2 = QtWidgets.QLabel(Dialog_LoginPage)
+        self.label.setText("Login Page")
+
+        #Label 2
+        self.label_2 = QtWidgets.QLabel(self)
         self.label_2.setGeometry(QtCore.QRect(20, 110, 461, 41))
         font = QtGui.QFont()
         font.setPointSize(15)
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
-        self.lineEdit_name = QtWidgets.QLineEdit(Dialog_LoginPage)
+        self.label_2.setText("Please enter your name:")
+
+        #Line edit name
+        self.lineEdit_name = QtWidgets.QLineEdit(self)
         self.lineEdit_name.setGeometry(QtCore.QRect(20, 150, 451, 31))
         self.lineEdit_name.setClearButtonEnabled(False)
         self.lineEdit_name.setObjectName("lineEdit_name")
-        self.pushButton_confirmLogin = QtWidgets.QPushButton(Dialog_LoginPage)
+
+        #confirm push button
+        self.pushButton_confirmLogin = QtWidgets.QPushButton(self)
         self.pushButton_confirmLogin.setGeometry(QtCore.QRect(100, 230, 111, 41))
         self.pushButton_confirmLogin.setObjectName("pushButton_confirmLogin")
-        self.pushButton_cancelLogin = QtWidgets.QPushButton(Dialog_LoginPage)
+        self.pushButton_confirmLogin.clicked.connect(self.login_clicked)
+        self.pushButton_confirmLogin.setText("Login")
+        
+        #cancel push button
+        self.pushButton_cancelLogin = QtWidgets.QPushButton(self)
         self.pushButton_cancelLogin.setGeometry(QtCore.QRect(280, 230, 111, 41))
         self.pushButton_cancelLogin.setObjectName("pushButton_cancelLogin")
-        self.username = ""
 
-        self.retranslateUi(Dialog_LoginPage)
-        QtCore.QMetaObject.connectSlotsByName(Dialog_LoginPage)
+        self.username = ""
+        self.pushButton_cancelLogin.clicked.connect(self.cancel_login)
+        self.pushButton_cancelLogin.setText("Cancel")
+
+        #self.retranslateUi(Dialog_LoginPage)
+        QtCore.QMetaObject.connectSlotsByName(self)
+
+    def login_clicked(self):
+        f = open('output.txt','a') #append
+        f.write('test \n')
+        f.close()
+
+    def cancel_login(self):
+        #self.done(1)
+        self.hide()
 
         self.pushButton_confirmLogin.clicked.connect(self.login_clicked)
 
@@ -51,19 +88,20 @@ class Ui_Dialog_LoginPage(object):
         
 
     def retranslateUi(self, Dialog_LoginPage):
-        _translate = QtCore.QCoreApplication.translate
-        Dialog_LoginPage.setWindowTitle(_translate("Dialog_LoginPage", "Dialog"))
-        self.label.setText(_translate("Dialog_LoginPage", "Login Page"))
-        self.label_2.setText(_translate("Dialog_LoginPage", "Please enter your name:"))
-        self.pushButton_confirmLogin.setText(_translate("Dialog_LoginPage", "Login"))
-        self.pushButton_cancelLogin.setText(_translate("Dialog_LoginPage", "Cancel"))
+        #_translate = QtCore.QCoreApplication.translate
+        #Dialog_LoginPage.setWindowTitle(_translate("Dialog_LoginPage", "Dialog"))
+        #self.label.setText(_translate("Dialog_LoginPage", "Login Page"))
+        #self.label_2.setText(_translate("Dialog_LoginPage", "Please enter your name:"))
+        #self.pushButton_confirmLogin.setText(_translate("Dialog_LoginPage", "Login"))
+        #self.pushButton_cancelLogin.setText(_translate("Dialog_LoginPage", "Cancel"))
+        pass
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Dialog_LoginPage = QtWidgets.QDialog()
-    ui = Ui_Dialog_LoginPage()
-    ui.setupUi(Dialog_LoginPage)
+    Dialog_LoginPage = Ui_Dialog_LoginPage()
+    #ui = Ui_Dialog_LoginPage()
+    #ui.setupUi(Dialog_LoginPage)
     Dialog_LoginPage.show()
     sys.exit(app.exec_())

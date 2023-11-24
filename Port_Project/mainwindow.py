@@ -10,18 +10,33 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from login import *
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 import re
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(803, 600)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+class Ui_MainWindow(QMainWindow):
+    def __init__(self):
+        super(Ui_MainWindow,self).__init__()
+        self.setObjectName("MainWindow")
+        self.resize(803, 600)
+        self.setWindowTitle("MainWindow")
+
+        self.setupUi()
+
+
+    def setupUi(self):
+
+        #Adding Widget functionality
+        self.centralwidget = QtWidgets.QWidget()
         self.centralwidget.setObjectName("centralwidget")
+
+        #Adding the uploadManifest button
         self.pushButton_uploadManifest = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_uploadManifest.setGeometry(QtCore.QRect(330, 380, 141, 61))
         self.pushButton_uploadManifest.setObjectName("pushButton_uploadManifest")
+        self.pushButton_uploadManifest.setText("Upload Manifest")
+
+        #Adding label for Long Beach Port
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(0, 150, 801, 91))
         font = QtGui.QFont()
@@ -30,6 +45,9 @@ class Ui_MainWindow(object):
         self.label.setFont(font)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
+        self.label.setText("Long Beach Port")
+
+        #Adding label for CMS Software
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(0, 230, 801, 41))
         font = QtGui.QFont()
@@ -38,27 +56,30 @@ class Ui_MainWindow(object):
         self.label_2.setFont(font)
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.label_2.setText("Container Moving Software (CMS)")
+        self.setCentralWidget(self.centralwidget)
+
+        #Adding menubar
+        self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 803, 22))
         self.menubar.setObjectName("menubar")
         self.menuLogin = QtWidgets.QMenu(self.menubar)
         self.menuLogin.setObjectName("menuLogin")
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.menuLogin.setTitle("Login")
+        self.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        self.setStatusBar(self.statusbar)
         self.menubar.addAction(self.menuLogin.menuAction())
         self.LoginWindow = None # Set login window to none to show it has not been open yet
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        #self.retranslateUi(self)
+        QtCore.QMetaObject.connectSlotsByName(self)
 
         self.pushButton_uploadManifest.clicked.connect(self.upload_manifest)
         self.menuLogin.aboutToShow.connect(self.show_login_window)
 
     def upload_manifest(self):
-
         name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', options=QtWidgets.QFileDialog.DontUseNativeDialog)
         file = open(name, 'r')
         coords, weights, container_names = [], [], []
@@ -84,25 +105,20 @@ class Ui_MainWindow(object):
 
     def show_login_window(self):
         if self.LoginWindow is None:
-            self.LoginWindow = QtWidgets.QDialog()
-            self.uiLogin = Ui_Dialog_LoginPage()
-            self.uiLogin.setupUi(self.LoginWindow)
+            self.LoginWindow = Ui_Dialog_LoginPage()
+            #self.LoginWindow = QtWidgets.QDialog()
+            #self.uiLogin = Ui_Dialog_LoginPage()
+            #self.uiLogin.setupUi(self.LoginWindow)
             self.LoginWindow.show()
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton_uploadManifest.setText(_translate("MainWindow", "Upload Manifest"))
-        self.label.setText(_translate("MainWindow", "Long Beach Port"))
-        self.label_2.setText(_translate("MainWindow", "Container Moving Software (CMS)"))
-        self.menuLogin.setTitle(_translate("MainWindow", "Login"))
+        else:
+            self.LoginWindow.showEvent(self)
 
 
 if __name__ == "__main__":
     import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    app = QApplication(sys.argv)
+    MainWindow = Ui_MainWindow()
+    #ui = Ui_MainWindow()
+    #ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
