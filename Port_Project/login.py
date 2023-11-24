@@ -10,7 +10,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class Ui_Dialog_LoginPage(object):
     def setupUi(self, Dialog_LoginPage):
         Dialog_LoginPage.setObjectName("Dialog_LoginPage")
@@ -39,9 +38,17 @@ class Ui_Dialog_LoginPage(object):
         self.pushButton_cancelLogin = QtWidgets.QPushButton(Dialog_LoginPage)
         self.pushButton_cancelLogin.setGeometry(QtCore.QRect(280, 230, 111, 41))
         self.pushButton_cancelLogin.setObjectName("pushButton_cancelLogin")
+        self.username = ""
 
         self.retranslateUi(Dialog_LoginPage)
         QtCore.QMetaObject.connectSlotsByName(Dialog_LoginPage)
+
+        self.pushButton_confirmLogin.clicked.connect(self.login_clicked)
+
+    def login_clicked(self):
+        self.username = self.lineEdit_name.text()
+        # Close QDialog Window here
+        
 
     def retranslateUi(self, Dialog_LoginPage):
         _translate = QtCore.QCoreApplication.translate

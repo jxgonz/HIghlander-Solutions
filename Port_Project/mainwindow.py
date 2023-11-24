@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from login import Ui_Dialog_LoginPage
+from login import *
 import re
 
 
@@ -61,33 +61,32 @@ class Ui_MainWindow(object):
 
         name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', options=QtWidgets.QFileDialog.DontUseNativeDialog)
         file = open(name, 'r')
-        x_coords, y_coords, weights, container_names = [], [], [], []
+        coords, weights, container_names = [], [], []
 
         for line in file:
             # Remove trailed newline character and brackets/paraenthesis from each line
             line = re.sub(r"[\([{})\]]", "", line)
             line = line.rstrip('\n')
             # Save x coordinate from current line and save rest of line in extra variable
-            x, extra = line.lstrip().split(',', 1)
-            # Save y coordinate current current line and save rest of line in extra variable
-            y, extra = extra.lstrip().split(',', 1)
+            coord, extra = line.lstrip().split(' ', 1)
+            # Remove trailing comma from coordinates
+            coord = coord[:-1] 
             # Save weight current current line and save rest of line in extra variable
             weight, extra = extra.lstrip().split(',', 1)
             # Save container name current line
             cont_name = extra.lstrip().split(',', 1)
 
             # Append values from current line to list
-            x_coords.append(x)
-            y_coords.append(y)
+            coords.append(coord)
             weights. append(weight)
             container_names.append(cont_name)
-        print(container_names)
+        print(coords)
 
     def show_login_window(self):
         if self.LoginWindow is None:
             self.LoginWindow = QtWidgets.QDialog()
-            ui = Ui_Dialog_LoginPage()
-            ui.setupUi(self.LoginWindow)
+            self.uiLogin = Ui_Dialog_LoginPage()
+            self.uiLogin.setupUi(self.LoginWindow)
             self.LoginWindow.show()
 
     def retranslateUi(self, MainWindow):
