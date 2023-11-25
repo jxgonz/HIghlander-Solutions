@@ -27,7 +27,7 @@ class Ui_Form(QWidget):
     def setupUi(self, Form):
         #Adding Widget functionality
         self.tableWidget = QtWidgets.QTableWidget(Form)
-        self.tableWidget.setGeometry(QtCore.QRect(110, 60, 590, 325))
+        self.tableWidget.setGeometry(QtCore.QRect(110, 130, 590, 325))
         self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
         self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
@@ -43,11 +43,6 @@ class Ui_Form(QWidget):
         self.tableWidget.verticalHeader().setDefaultSectionSize(40)
         self.tableWidget.verticalHeader().setMinimumSectionSize(40)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
-
-        for row in range (8):
-            for column in range (12):
-                self.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
-                self.tableWidget.item(row, column).setBackground(QtGui.QColor(100,100,150))
 
         self.containers_remove = []
 
