@@ -9,13 +9,20 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QWidget
 
 
-class Ui_Form(object):
+class Ui_Form(QWidget):
+    def __init__(self):
+        #default grid settings
+        super(Ui_Form,self).__init__()
+        self.setObjectName("Remove Containers")
+        self.resize(802, 515)
+        self.setAutoFillBackground(False)
+        self.setupUi(self)
+
     def setupUi(self, Form):
-        Form.setObjectName("Remove Containers")
-        Form.resize(802, 515)
-        Form.setAutoFillBackground(False)
+        #Adding Widget functionality
         self.tableWidget = QtWidgets.QTableWidget(Form)
         self.tableWidget.setGeometry(QtCore.QRect(110, 60, 590, 325))
         self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
@@ -35,13 +42,14 @@ class Ui_Form(object):
         self.tableWidget.verticalHeader().setStretchLastSection(False)
         self.containers_remove = []
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
-
         self.tableWidget.cellClicked.connect(self.cell_was_clicked)
+
+        self.tableWidget.setStyleSheet("QTableWidget::item:selected{ background-color: %s }" % QtGui.QColor(255,0,0).name())
 
     def cell_was_clicked(self, row, column):
         # format row and column numbers to match manifest format
+        int_row = row
+        int_column = column
         row = 8-row
         row = f"0{row}"
         column = column+1
@@ -52,26 +60,21 @@ class Ui_Form(object):
         container = f"{row},{column}"
         if container in self.containers_remove:
             self.containers_remove.remove(container)
+            self.tableWidget.item(int_row, int_column).setBackground(QtGui.QColor(100,100,150))
         # If container has not been clicked, add it to list
         else:    
             self.containers_remove.append(container)
         # Print all containers to be removed
         print(self.containers_remove)
 
-    def retranslateUi(self, Form):
-        _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Remove Containers", "Remove Containers"))
-
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
+    Form = Ui_Form()
     for row in range (8):
         for column in range (12):
-            ui.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
-            ui.tableWidget.item(row, column).setBackground(QtGui.QColor(100,100,150))
+            Form.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+            Form.tableWidget.item(row, column).setBackground(QtGui.QColor(100,100,150))
     Form.show()
     sys.exit(app.exec_())
