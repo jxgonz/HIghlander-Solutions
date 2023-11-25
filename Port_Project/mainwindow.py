@@ -113,7 +113,7 @@ class Ui_MainWindow(QMainWindow):
     def show_login_window(self):
         # If login window is not open, open it
         if self.LoginWindow is None:
-            self.LoginWindow = Ui_Dialog_LoginPage()
+            self.LoginWindow = Ui_Dialog_LoginPage(self)
         # Set login window to application modal so that it must be closed before main window can be used
         # This solves the issue of when you open the login window a second time it will be behind the main window
         self.LoginWindow.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -121,7 +121,7 @@ class Ui_MainWindow(QMainWindow):
 
     def populateShipGrid(self, containerNames = []):
         if self.shipGrid is None:
-            self.shipGrid = Ui_Form()
+            self.shipGrid = Ui_Form(self)
         self.shipGrid.show()
 
 
