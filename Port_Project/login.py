@@ -86,15 +86,6 @@ class Ui_Dialog_LoginPage(QDialog):
         # Close QDialog Window here
         
 
-    def retranslateUi(self, Dialog_LoginPage):
-        #_translate = QtCore.QCoreApplication.translate
-        #Dialog_LoginPage.setWindowTitle(_translate("Dialog_LoginPage", "Dialog"))
-        #self.label.setText(_translate("Dialog_LoginPage", "Login Page"))
-        #self.label_2.setText(_translate("Dialog_LoginPage", "Please enter your name:"))
-        #self.pushButton_confirmLogin.setText(_translate("Dialog_LoginPage", "Login"))
-        #self.pushButton_cancelLogin.setText(_translate("Dialog_LoginPage", "Cancel"))
-        pass
-
 
 if __name__ == "__main__":
     import sys

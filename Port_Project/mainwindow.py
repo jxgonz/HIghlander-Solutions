@@ -112,15 +112,14 @@ class Ui_MainWindow(QMainWindow):
     def show_login_window(self):
         if self.LoginWindow is None:
             self.LoginWindow = Ui_Dialog_LoginPage()
-            
-        self.LoginWindow.show()
+            self.LoginWindow.show()
+        else:
+            self.LoginWindow.show()
 
 
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
     MainWindow = Ui_MainWindow()
-    #ui = Ui_MainWindow()
-    #ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
