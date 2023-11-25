@@ -10,6 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from login import *
+from ship_grid import *
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from datetime import datetime
 import re
@@ -72,6 +73,7 @@ class Ui_MainWindow(QMainWindow):
         self.setStatusBar(self.statusbar)
         self.menubar.addAction(self.menuLogin.menuAction())
         self.LoginWindow = None # Set login window to none to show it has not been open yet
+        self.shipGrid = None # Set ship grid window to none to show it has not been open yet
 
         #Connecting buttons to functions
         self.pushButton_uploadManifest.clicked.connect(self.upload_manifest)
@@ -104,7 +106,9 @@ class Ui_MainWindow(QMainWindow):
             coords.append(coord)
             weights. append(weight)
             container_names.append(cont_name)
-        print(coords)
+        print(weights)
+        self.populateShipGrid(container_names)
+        self.close()
 
     def show_login_window(self):
         # If login window is not open, open it
@@ -114,6 +118,12 @@ class Ui_MainWindow(QMainWindow):
         # This solves the issue of when you open the login window a second time it will be behind the main window
         self.LoginWindow.setWindowModality(QtCore.Qt.ApplicationModal)
         self.LoginWindow.show()
+
+    def populateShipGrid(self, containerNames = []):
+        if self.shipGrid is None:
+            self.shipGrid = Ui_Form()
+        self.shipGrid.show()
+
 
 
 if __name__ == "__main__":
