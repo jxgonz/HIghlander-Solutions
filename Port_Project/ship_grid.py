@@ -41,10 +41,11 @@ class Ui_Form(QWidget):
         self.tableWidget.verticalHeader().setDefaultSectionSize(40)
         self.tableWidget.verticalHeader().setMinimumSectionSize(40)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
-
+        # List that holds containers selected to be removed from ship
         self.containers_remove = []
-
+        # Checks if selection was changed on ship grid
         self.tableWidget.selectionModel().selectionChanged.connect(self.on_selectionChanged)
+        # Set highlighted color on ship grid to red when a container is selected to be removed
         self.tableWidget.setStyleSheet("QTableWidget::item:selected{ background-color: %s }" % QtGui.QColor(255,0,0).name())
 
         #Adding Tool bar for back button 
