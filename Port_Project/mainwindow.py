@@ -128,14 +128,19 @@ class Ui_MainWindow(QMainWindow):
             for row in reversed(range (8)):
                 for column in range (12):
                     if containerNames[i] == "NAN":
+                        # Set nan cells to black color
                         self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
                         self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,0))
+                        # Set nan cells to unclickable
                         self.shipGrid.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
                     elif containerNames[i] == "UNUSED":
+                        # Set unused cells to gray color
                         self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
                         self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(169,169,169))
+                        # Set unused cells to unclickable
                         self.shipGrid.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
                     else:
+                        # Set used cells to blue color
                         self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
                         self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
                     i=i+1
