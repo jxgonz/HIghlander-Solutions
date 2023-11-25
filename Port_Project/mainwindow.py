@@ -123,15 +123,18 @@ class Ui_MainWindow(QMainWindow):
     def populateShipGrid(self, containerNames = []):
         if self.shipGrid is None:
             self.shipGrid = Ui_Form()
+            # Set color of ship grid cells based on NAN, Unused, or Used
             i = 0
-            for row in range (8):
+            for row in reversed(range (8)):
                 for column in range (12):
                     if containerNames[i] == "NAN":
                         self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
                         self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,0))
+                        self.shipGrid.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
                     elif containerNames[i] == "UNUSED":
                         self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
                         self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(169,169,169))
+                        self.shipGrid.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
                     else:
                         self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
                         self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))

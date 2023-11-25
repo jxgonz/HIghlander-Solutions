@@ -9,10 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QWidget, QTextEdit, QMenuBar, QMenu,QHBoxLayout, QVBoxLayout
-from PyQt5.QtWidgets import QWidget, QMainWindow
+from PyQt5.QtWidgets import *
 from mainwindow import Ui_MainWindow
-
 
 
 class Ui_Form(QWidget):
@@ -46,11 +44,10 @@ class Ui_Form(QWidget):
 
         self.containers_remove = []
 
-        self.tableWidget.cellClicked.connect(self.cell_was_clicked)
-
+        self.tableWidget.selectionModel().selectionChanged.connect(self.on_selectionChanged)
         self.tableWidget.setStyleSheet("QTableWidget::item:selected{ background-color: %s }" % QtGui.QColor(255,0,0).name())
 
-                #Adding Tool bar for back button 
+        #Adding Tool bar for back button 
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
@@ -63,32 +60,38 @@ class Ui_Form(QWidget):
 
         self.fileMenu.aboutToShow.connect(self.show_main_window)
         
-
     def show_main_window(self):
         self.main_window = Ui_MainWindow()
         self.main_window.show()
         self.close()
 
-    def cell_was_clicked(self, row, column):
-        # format row and column numbers to match manifest format
-        int_row = row
-        int_column = column
-        row = 8-row
-        row = f"0{row}"
-        column = column+1
-        if column < 10:
-            column = f"0{column}"
-
-        # If container has already been clicked, remove it from list if it is clicked again
-        container = f"{row},{column}"
-        if container in self.containers_remove:
-            self.containers_remove.remove(container)
-        # If container has not been clicked, add it to list
-        else:    
+    def on_selectionChanged(self, selected, deselected):
+        # If container is selected, format and append to list
+        for i in selected.indexes():
+            row = i.row()
+            column = i.column()
+            row = 8-row
+            row = f"0{row}"
+            column = column+1
+            if column < 10:
+                column = f"0{column}"
+            container = f"{row},{column}"
             self.containers_remove.append(container)
-        # Print all containers to be removed
-        print(self.containers_remove)
 
+        # If container is deselected, format and remove from list
+        for i in deselected.indexes():
+            row = i.row()
+            column = i.column()
+            row = 8-row
+            row = f"0{row}"
+            column = column+1
+            if column < 10:
+                column = f"0{column}"
+            container = f"{row},{column}"
+            self.containers_remove.remove(container)
+        
+        # Print all containers to be removed
+        print(self.containers_remove)    
 
 if __name__ == "__main__":
     import sys
