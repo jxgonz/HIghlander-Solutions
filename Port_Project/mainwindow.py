@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from login import *
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
+from datetime import datetime
 import re
 
 class Ui_MainWindow(QMainWindow):
@@ -72,16 +73,17 @@ class Ui_MainWindow(QMainWindow):
         self.menubar.addAction(self.menuLogin.menuAction())
         self.LoginWindow = None # Set login window to none to show it has not been open yet
 
-        #self.retranslateUi(self)
-        QtCore.QMetaObject.connectSlotsByName(self)
-
+        #Connecting buttons to functions
         self.pushButton_uploadManifest.clicked.connect(self.upload_manifest)
         self.menuLogin.aboutToShow.connect(self.show_login_window)
 
     def upload_manifest(self):
+        # Open file dialog and get file name
         name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', options=QtWidgets.QFileDialog.DontUseNativeDialog)
+        # If no file is selected, return
         if name == '':
             return
+        # Open file and read each line
         file = open(name, 'r')
         coords, weights, container_names = [], [], []
 
@@ -105,8 +107,12 @@ class Ui_MainWindow(QMainWindow):
         print(coords)
 
     def show_login_window(self):
+        # If login window is not open, open it
         if self.LoginWindow is None:
             self.LoginWindow = Ui_Dialog_LoginPage()
+        # Set login window to application modal so that it must be closed before main window can be used
+        # This solves the issue of when you open the login window a second time it will be behind the main window
+        self.LoginWindow.setWindowModality(QtCore.Qt.ApplicationModal)
         self.LoginWindow.show()
 
 
