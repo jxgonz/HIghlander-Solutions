@@ -15,14 +15,7 @@ import re
 
 class Ui_MainWindow(QMainWindow):
     def __init__(self):
-        super(Ui_MainWindow,self).__init__()
-        self.setObjectName("MainWindow")
-        self.resize(803, 600)
-        self.setWindowTitle("MainWindow")
-        self.setupUi()
-
-class Ui_MainWindow(QMainWindow):
-    def __init__(self):
+        #default main window settings
         super(Ui_MainWindow,self).__init__()
         self.setObjectName("MainWindow")
         self.resize(803, 600)
@@ -87,6 +80,8 @@ class Ui_MainWindow(QMainWindow):
 
     def upload_manifest(self):
         name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', options=QtWidgets.QFileDialog.DontUseNativeDialog)
+        if name == '':
+            return
         file = open(name, 'r')
         coords, weights, container_names = [], [], []
 
@@ -112,9 +107,7 @@ class Ui_MainWindow(QMainWindow):
     def show_login_window(self):
         if self.LoginWindow is None:
             self.LoginWindow = Ui_Dialog_LoginPage()
-            self.LoginWindow.show()
-        else:
-            self.LoginWindow.show()
+        self.LoginWindow.show()
 
 
 if __name__ == "__main__":

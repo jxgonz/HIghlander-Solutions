@@ -71,27 +71,20 @@ class Ui_Dialog_LoginPage(QDialog):
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def login_clicked(self):
+        self.username = self.lineEdit_name.text()
         f = open('output.txt','a') #append
-        f.write('test \n')
+        f.write(self.username + '\n')
         f.close()
+        self.done(1)
 
     def cancel_login(self):
-        #self.done(1)
-        self.hide()
+        self.done(1)
 
-        self.pushButton_confirmLogin.clicked.connect(self.login_clicked)
-
-    def login_clicked(self):
-        self.username = self.lineEdit_name.text()
-        # Close QDialog Window here
-        
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Dialog_LoginPage = Ui_Dialog_LoginPage()
-    #ui = Ui_Dialog_LoginPage()
-    #ui.setupUi(Dialog_LoginPage)
     Dialog_LoginPage.show()
     sys.exit(app.exec_())
