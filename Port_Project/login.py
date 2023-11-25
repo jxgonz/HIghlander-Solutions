@@ -65,6 +65,7 @@ class Ui_Dialog_LoginPage(QDialog):
         self.pushButton_cancelLogin.setObjectName("pushButton_cancelLogin")
         self.pushButton_cancelLogin.clicked.connect(self.cancel_login)
         self.pushButton_cancelLogin.setText("Cancel")
+        self.username = ""
 
         #self.retranslateUi(Dialog_LoginPage)
         QtCore.QMetaObject.connectSlotsByName(self)
@@ -77,6 +78,13 @@ class Ui_Dialog_LoginPage(QDialog):
     def cancel_login(self):
         #self.done(1)
         self.hide()
+
+        self.pushButton_confirmLogin.clicked.connect(self.login_clicked)
+
+    def login_clicked(self):
+        self.username = self.lineEdit_name.text()
+        # Close QDialog Window here
+        
 
     def retranslateUi(self, Dialog_LoginPage):
         #_translate = QtCore.QCoreApplication.translate
