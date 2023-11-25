@@ -101,12 +101,13 @@ class Ui_MainWindow(QMainWindow):
             weight, extra = extra.lstrip().split(',', 1)
             # Save container name current line
             cont_name = extra.lstrip().split(',', 1)
+            cont_name = cont_name[0]
 
             # Append values from current line to list
             coords.append(coord)
             weights. append(weight)
             container_names.append(cont_name)
-        print(weights)
+
         self.populateShipGrid(container_names)
         self.close()
 
@@ -122,6 +123,19 @@ class Ui_MainWindow(QMainWindow):
     def populateShipGrid(self, containerNames = []):
         if self.shipGrid is None:
             self.shipGrid = Ui_Form()
+            i = 0
+            for row in range (8):
+                for column in range (12):
+                    if containerNames[i] == "NAN":
+                        self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                        self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,0))
+                    elif containerNames[i] == "UNUSED":
+                        self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                        self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(169,169,169))
+                    else:
+                        self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                        self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
+                    i=i+1
         self.shipGrid.show()
 
 
