@@ -40,6 +40,12 @@ class Ui_Form(QWidget):
         self.tableWidget.verticalHeader().setDefaultSectionSize(40)
         self.tableWidget.verticalHeader().setMinimumSectionSize(40)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
+
+        for row in range (8):
+            for column in range (12):
+                self.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                self.tableWidget.item(row, column).setBackground(QtGui.QColor(100,100,150))
+
         self.containers_remove = []
 
         self.tableWidget.cellClicked.connect(self.cell_was_clicked)
@@ -60,7 +66,6 @@ class Ui_Form(QWidget):
         container = f"{row},{column}"
         if container in self.containers_remove:
             self.containers_remove.remove(container)
-            self.tableWidget.item(int_row, int_column).setBackground(QtGui.QColor(100,100,150))
         # If container has not been clicked, add it to list
         else:    
             self.containers_remove.append(container)
@@ -72,9 +77,5 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = Ui_Form()
-    for row in range (8):
-        for column in range (12):
-            Form.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
-            Form.tableWidget.item(row, column).setBackground(QtGui.QColor(100,100,150))
     Form.show()
     sys.exit(app.exec_())
