@@ -63,10 +63,9 @@ class Ui_Dialog_LoginPage(QDialog):
         self.pushButton_cancelLogin = QtWidgets.QPushButton(self)
         self.pushButton_cancelLogin.setGeometry(QtCore.QRect(280, 230, 111, 41))
         self.pushButton_cancelLogin.setObjectName("pushButton_cancelLogin")
-
-        self.username = ""
         self.pushButton_cancelLogin.clicked.connect(self.cancel_login)
         self.pushButton_cancelLogin.setText("Cancel")
+        self.username = ""
 
         #self.retranslateUi(Dialog_LoginPage)
         QtCore.QMetaObject.connectSlotsByName(self)
