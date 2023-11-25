@@ -10,7 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
-from mainwindow import Ui_MainWindow
+from mainwindow import *
 
 
 class Ui_Form(QWidget):
