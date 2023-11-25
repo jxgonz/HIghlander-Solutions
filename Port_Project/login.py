@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog
+from datetime import datetime
 
 class Ui_Dialog_LoginPage(QDialog):
     def __init__(self):
@@ -21,8 +22,7 @@ class Ui_Dialog_LoginPage(QDialog):
         self.setupUi()
 
     def setupUi(self):
-        #Dialog_LoginPage.setObjectName("Dialog_LoginPage")
-        #Dialog_LoginPage.resize(487, 320)
+        #Adding Widget functionality
         self.secondarywidget = QtWidgets.QWidget()
         self.secondarywidget.setObjectName("secondarywidget")
 
@@ -51,6 +51,7 @@ class Ui_Dialog_LoginPage(QDialog):
         self.lineEdit_name.setGeometry(QtCore.QRect(20, 150, 451, 31))
         self.lineEdit_name.setClearButtonEnabled(False)
         self.lineEdit_name.setObjectName("lineEdit_name")
+        self.lineEdit_name.setFocus()
 
         #confirm push button
         self.pushButton_confirmLogin = QtWidgets.QPushButton(self)
@@ -67,31 +68,33 @@ class Ui_Dialog_LoginPage(QDialog):
         self.pushButton_cancelLogin.setText("Cancel")
         self.username = ""
 
-        #self.retranslateUi(Dialog_LoginPage)
-        QtCore.QMetaObject.connectSlotsByName(self)
-
     def login_clicked(self):
+        #Saves the name of the user on the line edit
+        self.username = self.lineEdit_name.text()
+
+        #Creates the time stamp for when the use signs in
+        # mm/dd/YY H:M
+        timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
+
+        #Opens the output.txt file and appends the username to it and closes it
         f = open('output.txt','a') #append
-        f.write('test \n')
+        f.write("<" + timeStamp + "> [" + self.username + "] Logged in\n")
         f.close()
 
+        #Clears the line edit and closes the window
+        self.lineEdit_name.clear()
+        self.done(1)
+
     def cancel_login(self):
-        #self.done(1)
-        self.hide()
+        #Clears the line edit and closes the window
+        self.lineEdit_name.clear()
+        self.done(1)
 
-        self.pushButton_confirmLogin.clicked.connect(self.login_clicked)
-
-    def login_clicked(self):
-        self.username = self.lineEdit_name.text()
-        # Close QDialog Window here
-        
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Dialog_LoginPage = Ui_Dialog_LoginPage()
-    #ui = Ui_Dialog_LoginPage()
-    #ui.setupUi(Dialog_LoginPage)
     Dialog_LoginPage.show()
     sys.exit(app.exec_())
