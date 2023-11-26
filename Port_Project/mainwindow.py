@@ -101,12 +101,13 @@ class Ui_MainWindow(QMainWindow):
             weight, extra = extra.lstrip().split(',', 1)
             # Save container name current line
             cont_name = extra.lstrip().split(',', 1)
+            cont_name = cont_name[0]
 
             # Append values from current line to list
             coords.append(coord)
             weights. append(weight)
             container_names.append(cont_name)
-        print(weights)
+
         self.populateShipGrid(container_names)
         self.close()
 
@@ -122,6 +123,27 @@ class Ui_MainWindow(QMainWindow):
     def populateShipGrid(self, containerNames = []):
         if self.shipGrid is None:
             self.shipGrid = Ui_Form(self)
+            # Set color of ship grid cells based on NAN, Unused, or Used
+            i = 0
+            for row in reversed(range (8)):
+                for column in range (12):
+                    if containerNames[i] == "NAN":
+                        # Set nan cells to black color
+                        self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                        self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,0))
+                        # Set nan cells to unclickable
+                        self.shipGrid.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
+                    elif containerNames[i] == "UNUSED":
+                        # Set unused cells to gray color
+                        self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                        self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(169,169,169))
+                        # Set unused cells to unclickable
+                        self.shipGrid.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
+                    else:
+                        # Set used cells to blue color
+                        self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                        self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
+                    i=i+1
         self.shipGrid.show()
 
 
