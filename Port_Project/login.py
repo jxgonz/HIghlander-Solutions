@@ -11,9 +11,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog
 from datetime import datetime
 
-class Ui_Dialog_LoginPage(QDialog):
-    def __init__(self):
+class Ui_Dialog_LoginPage(QDialog, object):
+    def __init__(self, parent, *args, **kwargs):
         super(Ui_Dialog_LoginPage,self).__init__()
+        self.parent = object
         self.setObjectName("Dialog_LoginPage")
         self.resize(487, 320)
         self.setWindowTitle("Dialog_LoginPage")
@@ -76,7 +77,7 @@ class Ui_Dialog_LoginPage(QDialog):
         timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
 
         #Opens the output.txt file and appends the username to it and closes it
-        f = open('output.txt','a') #append
+        f = open('Port_Project/output.txt','a') #append
         f.write("<" + timeStamp + "> [" + self.username + "] Logged in\n")
         f.close()
 

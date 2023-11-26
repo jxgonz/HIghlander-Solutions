@@ -109,12 +109,12 @@ class Ui_MainWindow(QMainWindow):
             container_names.append(cont_name)
 
         self.populateShipGrid(container_names)
-        self.close()
+        #self.close()
 
     def show_login_window(self):
         # If login window is not open, open it
         if self.LoginWindow is None:
-            self.LoginWindow = Ui_Dialog_LoginPage()
+            self.LoginWindow = Ui_Dialog_LoginPage(self)
         # Set login window to application modal so that it must be closed before main window can be used
         # This solves the issue of when you open the login window a second time it will be behind the main window
         self.LoginWindow.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -122,7 +122,7 @@ class Ui_MainWindow(QMainWindow):
 
     def populateShipGrid(self, containerNames = []):
         if self.shipGrid is None:
-            self.shipGrid = Ui_Form()
+            self.shipGrid = Ui_Form(self)
             # Set color of ship grid cells based on NAN, Unused, or Used
             i = 0
             for row in reversed(range (8)):
@@ -144,6 +144,7 @@ class Ui_MainWindow(QMainWindow):
                         self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
                         self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
                     i=i+1
+        self.shipGrid.setWindowModality(QtCore.Qt.ApplicationModal)
         self.shipGrid.show()
 
 
