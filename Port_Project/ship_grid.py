@@ -103,9 +103,9 @@ class Ui_Form(QWidget, object):
         pass
 
     def show_main_window(self):
-        self.main_window = Ui_MainWindow()
-        self.main_window.show()
-        self.hide()
+        #self.main_window = Ui_MainWindow()
+        #self.main_window.show()
+        self.close()
         #self.parent.show()
 
     def on_selectionChanged(self, selected, deselected):
@@ -136,9 +136,9 @@ class Ui_Form(QWidget, object):
         # Print all containers to be removed
         print(self.containers_remove)    
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = Ui_Form()
-    Form.show()
-    sys.exit(app.exec_())
+#if __name__ == "__main__":
+#    import sys
+#    app = QtWidgets.QApplication(sys.argv)
+#    Form = Ui_Form()
+#    Form.show()
+#    sys.exit(app.exec_())

@@ -109,7 +109,7 @@ class Ui_MainWindow(QMainWindow):
             container_names.append(cont_name)
 
         self.populateShipGrid(container_names)
-        self.close()
+        #self.close()
 
     def show_login_window(self):
         # If login window is not open, open it
@@ -144,6 +144,7 @@ class Ui_MainWindow(QMainWindow):
                         self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
                         self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
                     i=i+1
+        self.shipGrid.setWindowModality(QtCore.Qt.ApplicationModal)
         self.shipGrid.show()
 
 
