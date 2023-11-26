@@ -13,10 +13,12 @@ from PyQt5.QtWidgets import *
 from mainwindow import Ui_MainWindow
 
 
-class Ui_Form(QWidget):
-    def __init__(self):
+
+class Ui_Form(QWidget, object):
+    def __init__(self, parent, *args, **kwargs):
         #default grid settings
         super(Ui_Form,self).__init__()
+        self.parent = object
         self.setObjectName("Remove Containers")
         self.resize(803, 600)
         self.setAutoFillBackground(False)
@@ -101,9 +103,10 @@ class Ui_Form(QWidget):
         pass
 
     def show_main_window(self):
-        self.main_window = Ui_MainWindow()
-        self.main_window.show()
+        #self.main_window = Ui_MainWindow()
+        #self.main_window.show()
         self.close()
+        #self.parent.show()
 
     def on_selectionChanged(self, selected, deselected):
         # If container is selected, format and append to list
@@ -133,9 +136,9 @@ class Ui_Form(QWidget):
         # Print all containers to be removed
         print(self.containers_remove)    
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = Ui_Form()
-    Form.show()
-    sys.exit(app.exec_())
+#if __name__ == "__main__":
+#    import sys
+#    app = QtWidgets.QApplication(sys.argv)
+#    Form = Ui_Form()
+#    Form.show()
+#    sys.exit(app.exec_())
