@@ -77,7 +77,7 @@ class Ui_Dialog_LoginPage(QDialog, object):
         timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
 
         #Opens the output.txt file and appends the username to it and closes it
-        f = open('Port_Project/output.txt','a') #append
+        f = open('output.txt','a') #append
         f.write("<" + timeStamp + "> [" + self.username + "] Logged in\n")
         f.close()
 
