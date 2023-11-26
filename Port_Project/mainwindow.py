@@ -122,7 +122,7 @@ class Ui_MainWindow(QMainWindow):
 
     def populateShipGrid(self, containerNames = []):
         if self.shipGrid is None:
-            self.shipGrid = Ui_Form()
+            self.shipGrid = Ui_Form(self)
             # Set color of ship grid cells based on NAN, Unused, or Used
             i = 0
             for row in reversed(range (8)):
