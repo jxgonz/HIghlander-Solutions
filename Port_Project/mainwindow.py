@@ -108,7 +108,7 @@ class Ui_MainWindow(QMainWindow):
             container_names.append(cont_name)
         print(weights)
         self.populateShipGrid(container_names)
-        self.close()
+        #self.close()
 
     def show_login_window(self):
         # If login window is not open, open it
@@ -122,6 +122,7 @@ class Ui_MainWindow(QMainWindow):
     def populateShipGrid(self, containerNames = []):
         if self.shipGrid is None:
             self.shipGrid = Ui_Form(self)
+        self.shipGrid.setWindowModality(QtCore.Qt.ApplicationModal)
         self.shipGrid.show()
 
 

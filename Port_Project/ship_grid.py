@@ -56,7 +56,7 @@ class Ui_Form(QWidget, object):
 
         self.tableWidget.setStyleSheet("QTableWidget::item:selected{ background-color: %s }" % QtGui.QColor(255,0,0).name())
 
-                #Adding Tool bar for back button 
+        #Adding Tool bar for back button 
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
@@ -71,9 +71,9 @@ class Ui_Form(QWidget, object):
         
 
     def show_main_window(self):
-        self.main_window = Ui_MainWindow()
-        self.main_window.show()
-        self.hide()
+        #self.main_window = Ui_MainWindow()
+        #self.main_window.show()
+        self.close()
         #self.parent.show()
 
     def cell_was_clicked(self, row, column):
@@ -97,9 +97,9 @@ class Ui_Form(QWidget, object):
         print(self.containers_remove)
 
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = Ui_Form()
-    Form.show()
-    sys.exit(app.exec_())
+#if __name__ == "__main__":
+#    import sys
+#    app = QtWidgets.QApplication(sys.argv)
+#    Form = Ui_Form()
+#    Form.show()
+#    sys.exit(app.exec_())
