@@ -50,13 +50,13 @@ class addContainers_Ui_Form(QWidget, object):
         self.lineEdit_addContainers.setFocus()
 
         # Adding the done button for when user is finished selecting containers to be removed
-        self.pushButton_removeDone = QtWidgets.QPushButton(self)
-        self.pushButton_removeDone.setGeometry(QtCore.QRect(330, 485, 141, 61))
+        self.pushButton_addDone = QtWidgets.QPushButton(self)
+        self.pushButton_addDone.setGeometry(QtCore.QRect(330, 485, 141, 61))
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.pushButton_removeDone.setFont(font)
-        self.pushButton_removeDone.setObjectName("pushButton_removeDone")
-        self.pushButton_removeDone.setText("Done")
+        self.pushButton_addDone.setFont(font)
+        self.pushButton_addDone.setObjectName("pushButton_addDone")
+        self.pushButton_addDone.setText("Done")
 
         # List that holds containers selected to be added to ship
         self.containers_add = []
@@ -78,15 +78,26 @@ class addContainers_Ui_Form(QWidget, object):
         self.layout.setMenuBar(self.menuBar)
         
         #Connecting buttons to functions
-        self.pushButton_removeDone.clicked.connect(self.remove_done)
+        self.pushButton_addDone.clicked.connect(self.add_done)
         self.fileMenu.aboutToShow.connect(self.show_shipGrid_window)
         self.loginWindow.aboutToShow.connect(self.show_login_window)
 
-    def remove_done(self):
-        self.containers_add.append(self.lineEdit_addContainers.text())
-        print(self.containers_add)
-        self.showDialog()
-        #run algorithm here and then open window to display stepwise solution
+    def add_done(self):
+        # If the user enters a container name and clicks "done"
+        if self.lineEdit_addContainers.text():
+            self.containers_add.append(self.lineEdit_addContainers.text())
+            print(self.containers_add)
+            self.showDialog()
+            #run algorithm here and then open window to display stepwise solution
+
+        # If the user does not enter a container name and clicks "done"
+        else:
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Critical)
+            msgBox.setText("Please enter a container name.")
+            msgBox.setWindowTitle("Error")
+            msgBox.setStandardButtons(QMessageBox.Ok)
+            msgBox.exec()
 
     def show_login_window(self):
         # If login window is not open, open it
