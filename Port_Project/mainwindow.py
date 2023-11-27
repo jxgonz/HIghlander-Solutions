@@ -79,6 +79,15 @@ class Ui_MainWindow(QMainWindow):
         self.pushButton_uploadManifest.clicked.connect(self.upload_manifest)
         self.menuLogin.aboutToShow.connect(self.show_login_window)
 
+    def show_login_window(self):
+        # If login window is not open, open it
+        if self.LoginWindow is None:
+            self.LoginWindow = Ui_Dialog_LoginPage(self)
+        # Set login window to application modal so that it must be closed before main window can be used
+        # This solves the issue of when you open the login window a second time it will be behind the main window
+        self.LoginWindow.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.LoginWindow.show()
+        
     def upload_manifest(self):
         # Open file dialog and get file name
         name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', options=QtWidgets.QFileDialog.DontUseNativeDialog)
@@ -111,15 +120,6 @@ class Ui_MainWindow(QMainWindow):
         self.populateShipGrid(container_names)
         #self.close()
 
-    def show_login_window(self):
-        # If login window is not open, open it
-        if self.LoginWindow is None:
-            self.LoginWindow = Ui_Dialog_LoginPage(self)
-        # Set login window to application modal so that it must be closed before main window can be used
-        # This solves the issue of when you open the login window a second time it will be behind the main window
-        self.LoginWindow.setWindowModality(QtCore.Qt.ApplicationModal)
-        self.LoginWindow.show()
-
     def populateShipGrid(self, containerNames = []):
         if self.shipGrid is None:
             self.shipGrid = Ui_Form(self)
@@ -147,8 +147,6 @@ class Ui_MainWindow(QMainWindow):
         self.shipGrid.setWindowModality(QtCore.Qt.ApplicationModal)
         self.shipGrid.tableWidget.clearSelection()
         self.shipGrid.show()
-
-
 
 if __name__ == "__main__":
     import sys
