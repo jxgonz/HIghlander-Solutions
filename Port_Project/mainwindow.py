@@ -90,7 +90,7 @@ class Ui_MainWindow(QMainWindow):
         
     def upload_manifest(self):
         # Open file dialog and get file name
-        name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', options=QtWidgets.QFileDialog.DontUseNativeDialog)
+        name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', filter="(*.txt)", options=QtWidgets.QFileDialog.DontUseNativeDialog)
         # If no file is selected, return
         if name == '':
             return
