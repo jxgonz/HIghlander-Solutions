@@ -10,7 +10,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
-from mainwindow import Ui_MainWindow
 from login import *
 from add_containers import *
 
@@ -153,11 +152,4 @@ class Ui_Form(QWidget, object):
             self.containers_remove.remove(container)
         
         # Print all containers to be removed
-        print(self.containers_remove)    
-
-#if __name__ == "__main__":
-#    import sys
-#    app = QtWidgets.QApplication(sys.argv)
-#    Form = Ui_Form()
-#    Form.show()
-#    sys.exit(app.exec_())
+        print(self.containers_remove)
