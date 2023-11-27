@@ -118,7 +118,6 @@ class Ui_MainWindow(QMainWindow):
             container_names.append(cont_name)
 
         self.populateShipGrid(container_names)
-        #self.close()
 
     def populateShipGrid(self, containerNames = []):
         if self.shipGrid is None:
