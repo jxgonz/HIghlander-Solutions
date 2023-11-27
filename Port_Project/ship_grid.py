@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from mainwindow import Ui_MainWindow
-
+from login import *
 
 
 class Ui_Form(QWidget, object):
@@ -43,6 +43,7 @@ class Ui_Form(QWidget, object):
         self.tableWidget.verticalHeader().setDefaultSectionSize(40)
         self.tableWidget.verticalHeader().setMinimumSectionSize(40)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
+        self.LoginWindow = None
 
         #Adding label for Ship Grid
         self.label_shipInventory = QtWidgets.QLabel(self)
@@ -88,19 +89,34 @@ class Ui_Form(QWidget, object):
 
         self.menuBar = QMenuBar()
         self.fileMenu = QMenu("Back")
+        self.loginWindow = QMenu("Login")
 
         self.menuBar.addMenu(self.fileMenu)
         self.menuBar.addAction(self.fileMenu.menuAction())
+        self.layout.setMenuBar(self.menuBar)
+
+        self.menuBar.addMenu(self.loginWindow)
+        self.menuBar.addAction(self.loginWindow.menuAction())
         self.layout.setMenuBar(self.menuBar)
         
         #Connecting buttons to functions
         self.pushButton_removeDone.clicked.connect(self.remove_done)
         self.fileMenu.aboutToShow.connect(self.show_main_window)
+        self.loginWindow.aboutToShow.connect(self.show_login_window)
         
     def remove_done(self):
         #show window to input crates to load onto ship
         #hide current window
         pass
+
+    def show_login_window(self):
+        # If login window is not open, open it
+        if self.LoginWindow is None:
+            self.LoginWindow = Ui_Dialog_LoginPage(self)
+        # Set login window to application modal so that it must be closed before main window can be used
+        # This solves the issue of when you open the login window a second time it will be behind the main window
+        self.LoginWindow.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.LoginWindow.show()
 
     def show_main_window(self):
         #self.main_window = Ui_MainWindow()

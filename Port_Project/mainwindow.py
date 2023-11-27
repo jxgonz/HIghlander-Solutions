@@ -145,6 +145,7 @@ class Ui_MainWindow(QMainWindow):
                         self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
                     i=i+1
         self.shipGrid.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.shipGrid.tableWidget.clearSelection()
         self.shipGrid.show()
 
 
