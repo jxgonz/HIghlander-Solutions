@@ -16,20 +16,21 @@ class Tree:
   def __init__(self, root):
     self.root = root
 
-
+class Crane:
+  def __init__(self, position, empty):
+    self.position = position
+    self.empty = empty
 
 class Problem:
   def __init__(self, initial_manifest, offloadShip, loadShip, cranePos):
     self.initial_manifest = initial_manifest
     self.offloadShip = offloadShip
     self.loadShip = loadShip
-    self.cranePos = cranePos
     self.operators = [
       (-1, 0), #move container left
       (1, 0),  #move container right
       (0, -1), #move container down
       (0, 1),  #move container up
-      
       ]
     
   def goal_test(self):
@@ -41,49 +42,65 @@ class Problem:
       else:
         return False
       
-  def apply_operator(self, state, operator):
-    new_position = (self.cranePos[0] + operator[0], self.cranePos[1] + operator[1])
+  def n_column_container_search(self, state, crane):
+    print(crane.position)
 
-    if new_position[0] < 1 or new_position[0] > 12 or new_position[1] < 1 or new_position[1] > 9 or state[new_position] == 'NAN':
-      return None
+    vals = []
+    counter = 0
+    for y in range(8):
+      if state[crane.position[0], y + 1] == "NAN" or state[crane.position[0], y + 1] == "UNUSED":
+        counter += 1
+      vals.append(state[crane.position[0], y + 1])
+    
+    if counter != 8:
+      for y in range(8,0,-1):
+        if state[crane.position[0], y] != "UNUSED" and state[crane.position[0], y] != "NAN":
+          crane.position = (crane.position[0],y)
+          crane.empty = False
+          break
 
-    self.cranePos = new_position
-    print(self.cranePos)
+
+    # new_position = (crane.position[0] + 1, crane.position[1])
+
+    # if new_position[0] < 1 or new_position[0] > 12 or new_position[1] < 1 or new_position[1] > 9:
+    #   return None
+
+    print(crane.position)
 
 
 
-def uniform_cost(problem):
-  maxLength = 0
-  root = Node(problem.initial_manifest, None, 0, 0)
-  tree = Tree(root)
-  frontier = {root}
-  explored = set()
+# def uniform_cost(problem):
+#   maxLength = 0
+#   root = Node(problem.initial_manifest, None, 0, 0)
+#   tree = Tree(root)
+#   frontier = {root}
+#   explored = set()
 
-  while len(frontier) != 0:
-    current_node = min(frontier, key=lambda node: node.f())
-    maxLength = max(len(frontier), maxLength)
-    frontier.remove(current_node)
+#   while len(frontier) != 0:
+#     current_node = min(frontier, key=lambda node: node.f())
+#     maxLength = max(len(frontier), maxLength)
+#     frontier.remove(current_node)
 
-    if problem.goal_test(current_node.state):
-      print(current_node.state)
+#     if problem.goal_test(current_node.state):
+#       print(current_node.state)
   
-    explored.add(current_node)
+#     explored.add(current_node)
 
-    for operator in problem.operators:
-      new_state = problem.apply_operator(current_node.state, operator)
+#     for operator in problem.operators:
+#       new_state = problem.apply_operator(current_node.state, operator)
 
-      if new_state is None:
-        continue
+#       if new_state is None:
+#         continue
 
-      new_node = Node(new_state, current_node, 0, 0)
+#       new_node = Node(new_state, current_node, 0, 0)
 
-      new_node.g = current_node.g
-      # new_node.h = problem
+#       new_node.g = current_node.g
+#       # new_node.h = problem
 
-      if new_node in explored or new_node in frontier:
-        continue
+#       if new_node in explored or new_node in frontier:
+#         continue
 
-      frontier.add(new_node)
+#       frontier.add(new_node)
 
 
 def driver():
@@ -99,18 +116,14 @@ def driver():
 
   dict = {}
   for i in data.index:
-    dict[(data.at[i, 0], data.at[i, 1])] = data.at[i, 3]
+    dict[(data.at[i, 1], data.at[i, 0])] = data.at[i, 3]
 
-  # print(dict)
-
-  crane = (5,5)
+  crane = Crane((1,9), True)
   problem = Problem(dict, 0, 0, crane)
 
-  # problem.apply_operator(dict, problem.operators[3])
+  problem.n_column_container_search(dict, crane)
 
-  for operator in problem.operators:
-    problem.apply_operator(dict, operator)
-
-  # solution = uniform_cost(problem)
+  # for x in range(12):
+  #   problem.n_column_container_search(dict, crane)
 
 driver()
