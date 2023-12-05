@@ -1,5 +1,12 @@
 # Container Class
 class Container:
+    # def __init__(self):
+    #     self.name = ""
+    #     self.coordinates = ()
+    #     self.needsLoad = False
+    #     self.needsUnload = False
+    #     self.success = False
+
     def __init__(self, name, coordinates, needsLoad, needsUnload):
         # String name of the Container
         self.name = name
@@ -11,9 +18,15 @@ class Container:
         self.needsUnload = needsUnload
         self.success = False
 
+    def __repr__(self):
+        return self.name
+    
     # Operator should be a tuple of int
     def move(self, operator):
         self.coordinates = self.coordinates + operator
+
+    def setCoordinates(self, coordinates):
+        self.coordinates = coordinates
 
     def containerLoaded(self):
         self.needsLoad = False
