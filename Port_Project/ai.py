@@ -19,25 +19,21 @@ class Tree:
     self.root = root
 
 class Crane:
-  def __init__(self, position):
-    self.position = position
-    self.empty = True
-    self.container_coordinate = ()
+  def __init__(self):
+    self.coordinates = (0,8)
+    self.empty = False
+    self.inBuffer = False
+    # self.container_coordinate = (0,8)
 
 class Problem:
-  def __init__(self, manifest, offloadShip, loadShip):
+  def __init__(self, manifest, buffer, offloadShip, loadShip):
     self.manifest = manifest
+    self.buffer = buffer
     self.offloadShip = offloadShip
     self.loadShip = loadShip
     self.cost = 0
     self.g = 0
     self.h = 0
-    self.operators = [
-      (-1, 0), #move container left
-      (1, 0),  #move container right
-      (0, -1), #move container down
-      (0, 1),  #move container up
-      ]
     
   def goal_test(self, state):
     if self.offloadShip in state:
@@ -47,16 +43,6 @@ class Problem:
         return True
       else:
         return False
-      
-  def apply_operator(self, state, crane, operator):
-    new_x = crane.position[0] + operator[0]
-    new_y = crane.position[1] + operator[1]
-
-    # Check if new crane position is invalid
-    if state[new_x][new_y].name != "UNUSED" or new_x < 0 or new_x > 38 or new_y < 0 or new_y > 9:
-      return None
-
-    crane.position = (new_x, new_y)
 
   def pick_up(self, crane, coordinate):
     crane.empty = False
@@ -72,28 +58,131 @@ class Problem:
         if container.name in self.offloadShip:
           return i
         
-  def ship_to_ship(self, state, coordinates):
-    lhs = coordinates[0] - 1
-    rhs = coordinates[0] + 1
+  def ship_to_ship(self, state, crane):
+    lhs = crane.coordinates[0] - 1
+    rhs = crane.coordinates[0] + 1
 
     while lhs >= 0 or rhs <= 11:
-
       for i in range(9):
         if lhs >= 0:
           if state[lhs][i].name == "UNUSED":
-            state[lhs][i].name = state[coordinates[0]][coordinates[1]].name
-            state[coordinates[0]][coordinates[1]].name = "UNUSED"
-            print(state[lhs][i].coordinates)
-            return(state[lhs][i].name, state[coordinates[0]][coordinates[1]].name)
+            state[lhs][i].name = state[crane.coordinates[0]][crane.coordinates[1]].name
+            state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
+            crane.coordinates = state[lhs][i].coordinates
+            crane.empty = True
+            return(crane.coordinates, crane.empty)
+            # print(state[lhs][i].coordinates)
+            # return(state[lhs][i].name, state[coordinates[0]][coordinates[1]].name)
         if rhs <= 11:
           if state[rhs][i].name == "UNUSED":
-            state[rhs][i].name = state[coordinates[0]][coordinates[1]].name
-            state[coordinates[0]][coordinates[1]].name = "UNUSED"
-            print(state[rhs][i].coordinates)
-            return(state[rhs][i].name, state[coordinates[0]][coordinates[1]].name)
-
+            state[rhs][i].name = state[crane.coordinates[0]][crane.coordinates[1]].name
+            state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
+            crane.coordinates = state[lhs][i].coordinates
+            crane.empty = True
+            return(crane.coordinates, crane.empty)
+            # print(state[rhs][i].coordinates)
+            # return(state[rhs][i].name, state[coordinates[0]][coordinates[1]].name)
       lhs -= 1
       rhs += 1
+
+  def ship_to_truck(self, state, crane):
+    if crane.empty:
+      if len(self.loadShip) != 0:
+        crane.coordinates = (0,8)
+        crane.empty = False
+        state[0][8].name = self.loadShip[0]
+        self.loadShip.remove(self.loadShip[0])
+        print(self.loadShip)
+        print(state[crane.coordinates[0]][crane.coordinates[1]])
+        print(crane.coordinates)
+      else:
+        print('No containers to add')
+      # print("EMPTY!", crane.coordinates)
+    else:
+      if state[crane.coordinates[0]][crane.coordinates[1]].name in self.offloadShip:
+        self.offloadShip.remove(state[crane.coordinates[0]][crane.coordinates[1]].name)
+        state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
+        crane.coordinates = (0,8)
+        crane.empty = True
+        print(self.offloadShip)
+        print(state[crane.coordinates[0]][crane.coordinates[1]])
+        print(crane.coordinates)
+      else:
+        print('Container "', state[crane.coordinates[0]][crane.coordinates[1]].name, '" does not need to be removed')
+
+  def ship_to_buffer(self, state, buffer, crane):
+    if crane.coordinates == (0,8) and crane.inBuffer == False:
+      if crane.empty:
+        for i in range(23,0,-1):
+          for container in list(reversed(buffer[i])):
+            if container.name != "UNUSED":
+              crane.coordinates = container.coordinates
+              crane.empty = False
+              crane.inBuffer = True
+
+        print(crane.coordinates, crane.empty, crane.inBuffer)
+        print(buffer[crane.coordinates[0]][crane.coordinates[1]])
+      else:
+        for i in range(23,0,-1):
+          for container in buffer[i]:
+            if container.name != "UNUSED":
+              container.name = state[0][8].name
+              state[0][8].name = "UNUSED"
+              crane.coordinates = container.coordinates
+              crane.empty = True
+              crane.inBuffer = True
+
+        print(crane.coordinates, crane.empty, crane.inBuffer)
+        print(buffer[crane.coordinates[0]][crane.coordinates[1]])
+    else:
+      print("Move crane to transfer cell")
+
+  def truck_to_ship(self, state, crane, coordinates=()):
+    if crane.empty:
+      crane.coordinates = coordinates
+      crane.empty = False
+    else:
+      for i in range(12):
+        for container in state[i]:
+          if container.name == "UNUSED" and state[0][8].name in self.loadShip:
+            container.name = state[0][8].name
+            self.loadShip.remove(state[0][8].name)
+            state[0][8].name = "UNUSED"
+            print(self.loadShip)
+            print(state[0][8])
+            print(container.coordinates)
+          else:
+            print("No containers to add")
+
+  def buffer_to_buffer(self, state, crane):
+    lhs = crane.coordinates[0] - 1
+    rhs = crane.coordinates[0] + 1
+
+    while lhs >= 0 or rhs <= 23:
+      for i in range(4):
+        if lhs >= 0:
+          if state[lhs][i].name == "UNUSED":
+            state[lhs][i].name = state[crane.coordinates[0]][crane.coordinates[1]].name
+            state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
+            crane.coordinates = state[lhs][i].coordinates
+            crane.empty = True
+            print(crane.coordinates, crane.empty)
+            # print(state[lhs][i].coordinates)
+            # return(state[lhs][i].name, state[crane.coordinates[0]][crane.coordinates[1]].name)
+        if rhs <= 23:
+          if state[rhs][i].name == "UNUSED":
+            state[rhs][i].name = state[crane.coordinates[0]][crane.coordinates[1]].name
+            state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
+            crane.coordinates = state[lhs][i].coordinates
+            crane.empty = True
+            print(crane.coordinates, crane.empty)
+            # print(state[rhs][i].coordinates)
+            # return(state[rhs][i].name, state[crane.coordinates[0]][crane.coordinates[1]].name)
+      lhs -= 1
+      rhs += 1
+
+  
+
 
 
 
@@ -202,7 +291,7 @@ def driver():
   for r in range(12):
     row = []
     for c in range(9):
-      row.append(Container("BLANK",(),False,False))
+      row.append(Container("BLANK",()))
     ship.append(row)
     row = None
 
@@ -211,20 +300,42 @@ def driver():
   for i in range(0,8):
     for j in range(0,12):
       containerName = data.at[k,3]
-      ship[j][i] = Container(containerName, (j,i), False, False)
+      ship[j][i] = Container(containerName, (j,i))
       # Creates a Container at (i, j) that still needs to be told
       # if needed to be unloaded or loaded (if at all needed)
       k = k + 1
   
   for i in range(0,12):
-    ship[i][8] = Container("NAN", (i,8), False, False)
+    ship[i][8] = Container("UNUSED", (i,8))
 
-  # ship[8][8] = Container("UNUSED", (8,8), False, False)
+  buffer = []
+  for r in range(24):
+    ro = []
+    for c in range(4):
+      ro.append(Container("UNUSED", (r,c)))
+    buffer.append(ro)
+    ro = None
+
+  # ship[8][8] = Container("UNUSED", (8,8))
   # print(ship[8][8])
 
-  crane = Crane((27,8))
-  problem = Problem(ship, ("Cat", "Dog"), ())
+  buffer[10][0].name = "WALMART"
+  ship[0][8].name = "GROW"
+  crane = Crane()
+  problem = Problem(ship, buffer, ["Cat"], ["Frog", "Blog"])
 
-  print(problem.ship_to_ship(ship, (1,0)))
+  # shiplist = buffer[10]
+  # print(list(reversed(shiplist)))
+
+  problem.ship_to_buffer(ship, buffer, crane)
+
+
+
+  # print(problem.buffer_to_buffer(buffer, crane))
+
+  # problem.ship_to_ship(ship, crane, (1,0))
+  # problem.ship_to_truck(ship, crane)
+  # print(problem.ship_to_ship(ship, crane, (2,0)))
+  # problem.ship_to_truck(ship, crane)
 
 driver()
