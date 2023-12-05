@@ -111,6 +111,7 @@ class Problem:
         print('Container "', state[crane.coordinates[0]][crane.coordinates[1]].name, '" does not need to be removed')
 
   def ship_to_buffer(self, state, buffer, crane):
+    container_name = state[0][8]
     if crane.coordinates == (0,8) and crane.inBuffer == False:
       if crane.empty:
         for i in range(23,0,-1):
@@ -125,15 +126,19 @@ class Problem:
       else:
         for i in range(23,0,-1):
           for container in buffer[i]:
-            if container.name != "UNUSED":
-              container.name = state[0][8].name
-              state[0][8].name = "UNUSED"
+            if container.name == "UNUSED":
+              container.name = container_name.name
+              container_name.name = "UNUSED"
               crane.coordinates = container.coordinates
               crane.empty = True
               crane.inBuffer = True
+              return(crane.coordinates, crane.empty, crane.inBuffer)
 
-        print(crane.coordinates, crane.empty, crane.inBuffer)
-        print(buffer[crane.coordinates[0]][crane.coordinates[1]])
+        # print(np.matrix(buffer))
+
+        # print(crane.coordinates, crane.empty, crane.inBuffer)
+        # print(buffer[crane.coordinates[0]][crane.coordinates[1]])
+        # return(buffer[23][0])
     else:
       print("Move crane to transfer cell")
 
@@ -148,6 +153,7 @@ class Problem:
             container.name = state[0][8].name
             self.loadShip.remove(state[0][8].name)
             state[0][8].name = "UNUSED"
+            crane.coordinates = container.coordinates
             print(self.loadShip)
             print(state[0][8])
             print(container.coordinates)
@@ -181,7 +187,26 @@ class Problem:
       lhs -= 1
       rhs += 1
 
-  
+  def buffer_to_ship(self, state, buffer,crane, coordinates = ()):
+    container_name = buffer[crane.coordinates[0]][crane.coordinates[1]]
+    if crane.inBuffer:
+      if crane.empty:
+        crane.coordinates = coordinates
+        crane.empty = False
+        crane.inBuffer = False
+        print(crane.coordinates, crane.empty, crane.inBuffer)
+      else:
+        for i in range(12):
+          for container in state[i]:
+            if container.name == "UNUSED":
+              container.name = container_name.name
+              container_name.name = "UNUSED"
+              crane.coordinates = container.coordinates
+              crane.inBuffer = False
+              # print(state[crane.coordinates[0]][crane.coordinates[1]])
+              # return(container.coordinates, crane.coordinates)
+    
+    print(np.matrix(state))
 
 
 
@@ -324,10 +349,7 @@ def driver():
   crane = Crane()
   problem = Problem(ship, buffer, ["Cat"], ["Frog", "Blog"])
 
-  # shiplist = buffer[10]
-  # print(list(reversed(shiplist)))
-
-  problem.ship_to_buffer(ship, buffer, crane)
+  print(problem.ship_to_buffer(ship, buffer, crane))
 
 
 
