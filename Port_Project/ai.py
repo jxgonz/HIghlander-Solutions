@@ -3,7 +3,7 @@ import numpy as np
 from container import Container
 
 class Node:
-  def __init__(self, state, parent=None, cost=0, g=0, h=0):
+  def __init__(self, state, parent=None, g=0, h=0):
     self.state = state
     self.parent = parent
     self.g = g
@@ -11,8 +11,6 @@ class Node:
 
   def f(self):
     return self.g + self.h
-
-
 
 class Tree:
   def __init__(self, root):
@@ -35,166 +33,203 @@ class Problem:
     self.g = 0
     self.h = 0
     
-  def goal_test(self, state):
-    if self.offloadShip in state:
-      return False
+  def goal_test(self, buffer):
+    if len(self.loadShip) == 0 and len(self.offloadShip) == 0:
+      for i in range(24):
+        for container in buffer[i]:
+          if container.name != "UNUSED":
+            return False
+      return True
     else:
-      if self.loadShip in state:
-        return True
-      else:
-        return False
-
-  def pick_up(self, crane, coordinate):
-    crane.empty = False
-    crane.container_coordinate = coordinate
-
-  def drop_off(self, crane):
-    crane.empty = True
-    crane.container_coordinate = ()
-
-  def column_container_search(self, state):
-    for i in range(27,39):
+      return False
+    
+  def apply_operator(self, operator, state, buffer, crane):
+    if operator == 0:
+      result = self.ship_to_ship(state, buffer, crane)
+    elif operator == 1:
+      result = self.ship_to_truck(state, buffer, crane)
+    elif operator == 2:
+      result = self.ship_to_buffer(state, buffer, crane)
+    elif operator == 3:
+      result = self.truck_to_ship(state, buffer, crane)
+    elif operator == 4:
+      result = self.buffer_to_buffer(state, buffer, crane)
+    elif operator == 5:
+      result = self.buffer_to_ship(state, buffer, crane)
+    elif operator == 6:
+      result = self.crane_to_ship(state, buffer, crane)
+  
+    return result
+    
+  def container_search(self, state):
+    for i in range(12):
       for container in state[i]:
         if container.name in self.offloadShip:
-          return i
+          return container.coordinates
+    return None
+  
+  def heuristic(self, state):
+    start = state[0]
+    end = state[1]
+    return abs(start[0] - end[0]) + abs(start[1] - end[1])
+
         
-  def ship_to_ship(self, state, crane):
-    lhs = crane.coordinates[0] - 1
-    rhs = crane.coordinates[0] + 1
-
-    while lhs >= 0 or rhs <= 11:
-      for i in range(9):
-        if lhs >= 0:
-          if state[lhs][i].name == "UNUSED":
-            state[lhs][i].name = state[crane.coordinates[0]][crane.coordinates[1]].name
-            state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
-            crane.coordinates = state[lhs][i].coordinates
-            crane.empty = True
-            return(crane.coordinates, crane.empty)
-            # print(state[lhs][i].coordinates)
-            # return(state[lhs][i].name, state[coordinates[0]][coordinates[1]].name)
-        if rhs <= 11:
-          if state[rhs][i].name == "UNUSED":
-            state[rhs][i].name = state[crane.coordinates[0]][crane.coordinates[1]].name
-            state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
-            crane.coordinates = state[lhs][i].coordinates
-            crane.empty = True
-            return(crane.coordinates, crane.empty)
-            # print(state[rhs][i].coordinates)
-            # return(state[rhs][i].name, state[coordinates[0]][coordinates[1]].name)
-      lhs -= 1
-      rhs += 1
-
-  def ship_to_truck(self, state, crane):
-    if crane.empty:
-      if len(self.loadShip) != 0:
-        crane.coordinates = (0,8)
-        crane.empty = False
-        state[0][8].name = self.loadShip[0]
-        self.loadShip.remove(self.loadShip[0])
-        print(self.loadShip)
-        print(state[crane.coordinates[0]][crane.coordinates[1]])
-        print(crane.coordinates)
-      else:
-        print('No containers to add')
-      # print("EMPTY!", crane.coordinates)
+  def ship_to_ship(self, state, buffer, crane):
+    if crane.empty == False and crane.inBuffer == False and state[crane.coordinates[0]][crane.coordinates[1]].name not in self.offloadShip:
+      start = crane.coordinates
+      lhs = crane.coordinates[0] - 1
+      rhs = crane.coordinates[0] + 1
+      while lhs >= 0 or rhs <= 11:
+        for i in range(9):
+          if lhs >= 0:
+            if state[lhs][i].name == "UNUSED":
+              state[lhs][i].name = state[crane.coordinates[0]][crane.coordinates[1]].name
+              state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
+              crane.coordinates = state[lhs][i].coordinates
+              crane.empty = True
+              return start, crane.coordinates
+          if rhs <= 11:
+            if state[rhs][i].name == "UNUSED":
+              state[rhs][i].name = state[crane.coordinates[0]][crane.coordinates[1]].name
+              state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
+              crane.coordinates = state[rhs][i].coordinates
+              crane.empty = True
+              return start, crane.coordinates
+        lhs -= 1
+        rhs += 1
     else:
-      if state[crane.coordinates[0]][crane.coordinates[1]].name in self.offloadShip:
-        self.offloadShip.remove(state[crane.coordinates[0]][crane.coordinates[1]].name)
-        state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
-        crane.coordinates = (0,8)
-        crane.empty = True
-        print(self.offloadShip)
-        print(state[crane.coordinates[0]][crane.coordinates[1]])
-        print(crane.coordinates)
+      return None
+
+  def ship_to_truck(self, state, buffer, crane):
+    if crane.inBuffer == False and crane.coordinates != (0,8):
+      start = crane.coordinates
+      if crane.empty:
+        if len(self.loadShip) != 0:
+          crane.coordinates = (0,8)
+          crane.empty = False
+          state[0][8].name = self.loadShip[0]
+          return start, crane.coordinates
+        else:
+          return None
       else:
-        print('Container "', state[crane.coordinates[0]][crane.coordinates[1]].name, '" does not need to be removed')
+        if state[crane.coordinates[0]][crane.coordinates[1]].name in self.offloadShip:
+          self.offloadShip.remove(state[crane.coordinates[0]][crane.coordinates[1]].name)
+          state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
+          crane.coordinates = (0,8)
+          crane.empty = True
+          return start, crane.coordinates
+        else:
+          return None
+    else:
+      return None
 
   def ship_to_buffer(self, state, buffer, crane):
-    container_name = state[0][8]
+    counter = 0
+    full = False
+    for i in range(12):
+      if state[i][8].name == "UNUSED":
+        counter += 1
+    if counter <= 1:
+      full = True
+    if full:
+      if crane.coordinates == (0,8) and crane.inBuffer == False:
+        start = crane.coordinates
+        if crane.empty:
+          for i in range(23,0,-1):
+            for container in list(reversed(buffer[i])):
+              if container.name != "UNUSED":
+                crane.coordinates = container.coordinates
+                crane.empty = False
+                crane.inBuffer = True
+                return start, crane.coordinates
+
+          # print(crane.coordinates, crane.empty, crane.inBuffer)
+          # print(buffer[crane.coordinates[0]][crane.coordinates[1]])
+        else:
+          container_name = state[0][8]
+          for i in range(23,0,-1):
+            for container in buffer[i]:
+              if container.name == "UNUSED":
+                container.name = container_name.name
+                container_name.name = "UNUSED"
+                crane.coordinates = container.coordinates
+                crane.empty = True
+                crane.inBuffer = True
+                return start, crane.coordinates
+      else:
+        return None
+    else:
+      return None
+
+  def truck_to_ship(self, state, buffer, crane):
     if crane.coordinates == (0,8) and crane.inBuffer == False:
+      start = crane.coordinates
       if crane.empty:
-        for i in range(23,0,-1):
-          for container in list(reversed(buffer[i])):
+        coordinates = self.container_search(state)
+        if coordinates != None:
+          for container in list(reversed(state[coordinates[0]])):
             if container.name != "UNUSED":
               crane.coordinates = container.coordinates
               crane.empty = False
-              crane.inBuffer = True
-
-        print(crane.coordinates, crane.empty, crane.inBuffer)
-        print(buffer[crane.coordinates[0]][crane.coordinates[1]])
+              crane.inBuffer = False
+              return start, crane.coordinates
+        else:
+          return None
       else:
-        for i in range(23,0,-1):
-          for container in buffer[i]:
-            if container.name == "UNUSED":
-              container.name = container_name.name
-              container_name.name = "UNUSED"
+        for i in range(12):
+          for container in state[i]:
+            if container.name == "UNUSED" and state[0][8].name in self.loadShip:
+              container.name = state[0][8].name
+              self.loadShip.remove(state[0][8].name)
+              state[0][8].name = "UNUSED"
               crane.coordinates = container.coordinates
               crane.empty = True
-              crane.inBuffer = True
-              return(crane.coordinates, crane.empty, crane.inBuffer)
-
-        # print(np.matrix(buffer))
-
-        # print(crane.coordinates, crane.empty, crane.inBuffer)
-        # print(buffer[crane.coordinates[0]][crane.coordinates[1]])
-        # return(buffer[23][0])
+              return start, crane.coordinates
+        return None
     else:
-      print("Move crane to transfer cell")
+      return None
 
-  def truck_to_ship(self, state, crane, coordinates=()):
-    if crane.empty:
-      crane.coordinates = coordinates
-      crane.empty = False
+  def buffer_to_buffer(self, state, buffer, crane):
+    if crane.inBuffer == True and crane.empty == False:
+      start = crane.coordinates
+      lhs = crane.coordinates[0] - 1
+      rhs = crane.coordinates[0] + 1
+
+      while lhs >= 0 or rhs <= 23:
+        for i in range(4):
+          if lhs >= 0:
+            if buffer[lhs][i].name == "UNUSED":
+              buffer[lhs][i].name = buffer[crane.coordinates[0]][crane.coordinates[1]].name
+              buffer[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
+              crane.coordinates = buffer[lhs][i].coordinates
+              crane.empty = True
+              return start, crane.coordinates
+
+          if rhs <= 23:
+            if buffer[rhs][i].name == "UNUSED":
+              buffer[rhs][i].name = buffer[crane.coordinates[0]][crane.coordinates[1]].name
+              buffer[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
+              crane.coordinates = buffer[lhs][i].coordinates
+              crane.empty = True
+              return start, crane.coordinates
+
+        lhs -= 1
+        rhs += 1
     else:
-      for i in range(12):
-        for container in state[i]:
-          if container.name == "UNUSED" and state[0][8].name in self.loadShip:
-            container.name = state[0][8].name
-            self.loadShip.remove(state[0][8].name)
-            state[0][8].name = "UNUSED"
-            crane.coordinates = container.coordinates
-            print(self.loadShip)
-            print(state[0][8])
-            print(container.coordinates)
-          else:
-            print("No containers to add")
+      return None
 
-  def buffer_to_buffer(self, state, crane):
-    lhs = crane.coordinates[0] - 1
-    rhs = crane.coordinates[0] + 1
-
-    while lhs >= 0 or rhs <= 23:
-      for i in range(4):
-        if lhs >= 0:
-          if state[lhs][i].name == "UNUSED":
-            state[lhs][i].name = state[crane.coordinates[0]][crane.coordinates[1]].name
-            state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
-            crane.coordinates = state[lhs][i].coordinates
-            crane.empty = True
-            print(crane.coordinates, crane.empty)
-            # print(state[lhs][i].coordinates)
-            # return(state[lhs][i].name, state[crane.coordinates[0]][crane.coordinates[1]].name)
-        if rhs <= 23:
-          if state[rhs][i].name == "UNUSED":
-            state[rhs][i].name = state[crane.coordinates[0]][crane.coordinates[1]].name
-            state[crane.coordinates[0]][crane.coordinates[1]].name = "UNUSED"
-            crane.coordinates = state[lhs][i].coordinates
-            crane.empty = True
-            print(crane.coordinates, crane.empty)
-            # print(state[rhs][i].coordinates)
-            # return(state[rhs][i].name, state[crane.coordinates[0]][crane.coordinates[1]].name)
-      lhs -= 1
-      rhs += 1
-
-  def buffer_to_ship(self, state, buffer,crane, coordinates = ()):
-    container_name = buffer[crane.coordinates[0]][crane.coordinates[1]]
-    if crane.inBuffer:
+  def buffer_to_ship(self, state, buffer,crane):
+    if crane.inBuffer == True:
+      start = crane.coordinates
+      container_name = buffer[crane.coordinates[0]][crane.coordinates[1]]
       if crane.empty:
-        crane.coordinates = coordinates
-        crane.empty = False
-        crane.inBuffer = False
-        print(crane.coordinates, crane.empty, crane.inBuffer)
+        coordinates = self.container_search(state)
+        for container in list(reversed(state[coordinates[0]])):
+          if container.name != "UNUSED":
+            crane.coordinates = container.coordinates
+            crane.empty = False
+            crane.inBuffer = False
+            return start, crane.coordinates
       else:
         for i in range(12):
           for container in state[i]:
@@ -203,106 +238,81 @@ class Problem:
               container_name.name = "UNUSED"
               crane.coordinates = container.coordinates
               crane.inBuffer = False
-              # print(state[crane.coordinates[0]][crane.coordinates[1]])
-              # return(container.coordinates, crane.coordinates)
+              crane.empty = True
+              return start, crane.coordinates
+    else:
+      return None
     
-    print(np.matrix(state))
-
+  def crane_to_ship(self, state, buffer, crane):
+    if crane.empty and crane.inBuffer == False and crane.coordinates != (0,8):
+      start = crane.coordinates
+      if self.container_search(state) != None:
+        column = self.container_search(state)[0]
+        for container in list(reversed(state[column])):
+          if container.name != "UNUSED":
+            crane.coordinates = container.coordinates
+            crane.empty = False
+            crane.inBuffer = False
+            return start, crane.coordinates
+      else:
+        return None
+    else:
+      return None
 
 
 
 def uniform_cost(problem, crane):
-  frontier = {}
-  visited = {}
-  max_frontier_size = 0
+  maxLength = 0
+  root = Node(((0,8),(0,8)), None, 0, 0)
+  tree = Tree(root)
+  frontier = {root}
+  explored = set()
 
-  current_node = problem.manifest
-  frontier.append(current_node)
+  while len(frontier) != 0:
+    current_node = min(frontier, key=lambda node: node.f())
+    maxLength = max(len(frontier), maxLength)
+    frontier.remove(current_node)
 
-  iter = 0
-  while True:
-    if not frontier:
-      print(f"To solve this problem the search algorithm expanded a total of {len(visited)} nodes.")
-      print(f"The maximum number of nodes in the queue at any one time: {max_frontier_size}.")
-      print()
-      return None #problem is impossible to solve
-
-    if (len(frontier) > max_frontier_size):
-      max_frontier_size = len(frontier)
-
-    frontier.sort(key = lambda x: x.cost, reverse=True)
-    current_node = frontier.pop()
-
-    if problem.goal_test(current_node):
-      print()
-      print(f"To solve this problem the search algorithm expanded a total of {len(visited)} nodes.")
-      print(f"The maximum number of nodes in the queue at any one time: {max_frontier_size}.")
-
-      return current_node
-    
-    visited.append(current_node)
-
-    for i in range(27, 39):
-      new = current_node.apply_operator(problem, crane, problem.operator[1])
-      in_lists = False
-
-      if new:
-        new.parent = current_node
-        new.g = current_node.g + 1
-        new.cost = new.g
-
-        in_lists = any(node.state == new.state for node in frontier)
-        if not in_lists:
-          in_lists = any(node.state == new.state for node in visited)
-
-        if not in_lists:
-          frontier.append(new)
-        else:
-          for i,node in enumerate(frontier):
-            if (node.state == new.state) and (new.cost < node.cost):
-              frontier[i] = new
-
-      iter += 1
-
-  # maxLength = 0
-  # root = Node(problem.manifest, None, 0, 0)
-  # tree = Tree(root)
-  # frontier = {root}
-  # explored = set()
-
-  # while len(frontier) != 0:
-  #   current_node = min(frontier, key=lambda node: node.f())
-  #   maxLength = max(len(frontier), maxLength)
-  #   frontier.remove(current_node)
-
-  #   if problem.goal_test(current_node.state):
-  #     path = []
-  #     while current_node:
-  #       path.append(current_node.state)
-  #       current_node = current_node.parent
-  #     path.reverse()
-  #     print(current_node.state)
+    if problem.goal_test(problem.buffer):
+      # print(np.matrix(current_node.state))
+      path=[]
+      while current_node:
+        path.append(current_node.state)
+        current_node = current_node.parent
+      path.reverse()
+      for state in path:
+        print(state)
+        print()
+      return path, maxLength
   
-  #   explored.add(current_node)
+    explored.add(current_node)
 
-  #   for operator in problem.operators:
-  #     new_state = problem.apply_operator(current_node.state, crane, operator)
+    for i in range(7):
+      new_state = problem.apply_operator(i, problem.manifest, problem.buffer, crane)
 
-  #     if new_state is None:
-  #       continue
+      if new_state is None:
+        continue
 
-  #     new_node = Node(new_state, current_node, 0, 0)
+      new_node = Node(new_state, current_node, 0, 0)
 
-  #     new_node.g = current_node.g + 1
+      new_node.g = current_node.g
+      new_node.h = problem.heuristic(new_state)
 
-  #     if new_node in explored or new_node in frontier:
-  #       continue
+      if new_node in explored or new_node in frontier:
+        continue
+      
+      # print(np.matrix(new_node.state))
+      # print()
 
-  #     frontier.add(new_node)
+      frontier.add(new_node)
+  return None, maxLength
+
+# def a_star(problem, crane):
+  
 
 
 def driver():
-  fileName = "Port_Project/ShipCase1.txt"
+  fileName = "ShipCase1.txt"
   data = pd.read_csv(fileName, header=None)
 
   data[0] = data[0].str.strip('[')
@@ -340,24 +350,15 @@ def driver():
       ro.append(Container("UNUSED", (r,c)))
     buffer.append(ro)
     ro = None
-
-  # ship[8][8] = Container("UNUSED", (8,8))
-  # print(ship[8][8])
-
-  buffer[10][0].name = "WALMART"
-  ship[0][8].name = "GROW"
+    
+  # print(np.matrix(ship))
+  # print()
+  
   crane = Crane()
-  problem = Problem(ship, buffer, ["Cat"], ["Frog", "Blog"])
-
-  print(problem.ship_to_buffer(ship, buffer, crane))
-
-
-
-  # print(problem.buffer_to_buffer(buffer, crane))
-
-  # problem.ship_to_ship(ship, crane, (1,0))
-  # problem.ship_to_truck(ship, crane)
-  # print(problem.ship_to_ship(ship, crane, (2,0)))
-  # problem.ship_to_truck(ship, crane)
+  problem = Problem(ship, buffer, ["Cat"], ["BRO"])
+  
+  uniform_cost(problem, crane)
+  # print()
+  # print(np.matrix(ship))
 
 driver()
