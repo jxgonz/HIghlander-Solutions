@@ -307,7 +307,55 @@ def uniform_cost(problem, crane):
       frontier.add(new_node)
   return None, maxLength
 
-# def a_star(problem, crane):
+def a_star(problem, crane):
+  maxLength = 0
+  root = Node(((0,8), (0,8)), None, 1, 1)
+  tree = Tree(root)
+  frontier = {root}
+  explored = set()
+  
+  while frontier:
+    current_node = min(frontier, key=lambda node: node.f())
+    frontier.remove(current_node)
+    maxLength = max(len(frontier), maxLength)
+    
+    explored.add(current_node)
+    
+    for i in range(7):
+      new_state = problem.apply_operator(i, problem.manifest, problem.buffer, crane)
+      
+      if new_state is None:
+        continue
+      
+      new_node = Node(new_state, current_node, 1, 1)
+      
+      new_node.g = current_node.g + 1
+      new_node.h = problem.heuristic(new_state)
+      
+      if new_node in explored:
+        continue
+      
+      if problem.goal_test(problem.buffer):
+      # print(np.matrix(current_node.state))
+        path=[]
+        while current_node:
+          path.append(current_node.state)
+          current_node = current_node.parent
+        path.reverse()
+        for state in path:
+          print(state)
+          print()
+        return path, maxLength
+    
+      if new_node in frontier:
+        frontier_node = next(node for node in frontier if node.state == new_node.state)
+        if new_node.f() < frontier_node.f():
+          frontier.remove(frontier_node)
+          frontier.add(new_node)
+      else:
+        frontier.add(new_node)
+        
+  return None, maxLength          
   
 
 
@@ -357,7 +405,8 @@ def driver():
   crane = Crane()
   problem = Problem(ship, buffer, ["Cat"], ["BRO"])
   
-  uniform_cost(problem, crane)
+  # uniform_cost(problem, crane)
+  a_star(problem, crane)
   # print()
   # print(np.matrix(ship))
 
