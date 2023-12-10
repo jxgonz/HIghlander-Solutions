@@ -119,8 +119,29 @@ class Ui_MainWindow(QMainWindow):
             self.coords.append(coord)
             self.weights. append(weight)
             self.container_names.append(cont_name)
+        # Show operation selection window
+        self.showDialog()
 
-        self.populateShipGrid()
+    # QMessageBox that asks user if they want to add another container
+    def showDialog(self):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setText("Which operation would you like to perform?")
+        msgBox.setWindowTitle("Choose Operation")
+        balance_button = msgBox.addButton('Balance', QtWidgets.QMessageBox.NoRole)
+        transfer_button = msgBox.addButton('Transfer', QtWidgets.QMessageBox.YesRole)
+
+        returnValue = msgBox.exec()
+        print(returnValue)
+        # If user would like to perform transfer operation
+        if returnValue == 1:
+            self.populateShipGrid()
+            msgBox.close()
+        # If user would like to perform balance operation
+        else:
+            msgBox.close()
+            #open window to display stepwise balance solution here
+            print("Balance Operation selected. Open window to display stepwise balance solution here.")
 
     def populateShipGrid(self):
         containerNames = self.container_names
