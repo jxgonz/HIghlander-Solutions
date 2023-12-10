@@ -69,6 +69,10 @@ class addContainers_Ui_Form(QWidget, object):
 
         # List that holds containers selected to be added to ship
         self.containers_add = []
+        self.containers_remove = []
+        self.container_names = []
+        self.weights = []
+        self.coords = []
 
         #Adding Tool bar for back button 
         self.layout = QVBoxLayout()

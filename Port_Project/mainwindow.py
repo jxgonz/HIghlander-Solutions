@@ -74,6 +74,9 @@ class Ui_MainWindow(QMainWindow):
         self.menubar.addAction(self.menuLogin.menuAction())
         self.LoginWindow = None # Set login window to none to show it has not been open yet
         self.shipGrid = None # Set ship grid window to none to show it has not been open yet
+        self.container_names = []
+        self.weights = []
+        self.coords = []
 
         #Connecting buttons to functions
         self.pushButton_uploadManifest.clicked.connect(self.upload_manifest)
@@ -113,15 +116,21 @@ class Ui_MainWindow(QMainWindow):
             cont_name = cont_name[0]
 
             # Append values from current line to list
-            coords.append(coord)
-            weights. append(weight)
-            container_names.append(cont_name)
+            self.coords.append(coord)
+            self.weights. append(weight)
+            self.container_names.append(cont_name)
 
-        self.populateShipGrid(container_names)
+        self.populateShipGrid()
 
-    def populateShipGrid(self, containerNames = []):
+    def populateShipGrid(self):
+        containerNames = self.container_names
         if self.shipGrid is None:
             self.shipGrid = Ui_Form(self)
+            # Pass all manifest info to next window (ShipGrid)
+            self.shipGrid.container_names = self.container_names
+            self.shipGrid.weights = self.weights
+            self.shipGrid.coords = self.coords
+
             # Set color of ship grid cells based on NAN, Unused, or Used
             i = 0
             for row in reversed(range (8)):
