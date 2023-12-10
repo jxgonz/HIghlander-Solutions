@@ -45,6 +45,9 @@ class Ui_Form(QWidget, object):
         self.tableWidget.verticalHeader().setStretchLastSection(False)
         self.LoginWindow = None
         self.addContainerWindow = None
+        self.container_names = []
+        self.weights = []
+        self.coords = []
 
         #Adding label for Ship Grid
         self.label_shipInventory = QtWidgets.QLabel(self)
@@ -109,6 +112,11 @@ class Ui_Form(QWidget, object):
         # If add container window is not open, open it
         if self.addContainerWindow is None:
             self.addContainerWindow = addContainers_Ui_Form(self)
+            # Pass all manifest info and containers to remove to addContainers window
+            self.addContainerWindow.container_names = self.container_names
+            self.addContainerWindow.weights = self.weights
+            self.addContainerWindow.coords = self.coords
+            self.addContainerWindow.containers_remove = self.containers_remove
         # Set login window to application modal so that it must be closed before main window can be used
         # This solves the issue of when you open the login window a second time it will be behind the main window
         self.addContainerWindow.setWindowModality(QtCore.Qt.ApplicationModal)
