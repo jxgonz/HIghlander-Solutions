@@ -172,10 +172,13 @@ class Ui_MainWindow(QMainWindow):
                         # Set used cells to blue color
                         self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
                         self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
+                        self.shipGrid.tableWidget.item(row, column).setText(containerNames[i])
                     i=i+1
         self.shipGrid.setWindowModality(QtCore.Qt.ApplicationModal)
         self.shipGrid.tableWidget.clearSelection()
         self.shipGrid.show()
+
+    
 
 if __name__ == "__main__":
     import sys
