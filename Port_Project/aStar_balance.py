@@ -1,5 +1,5 @@
 #uniform cost search
-from grid import *
+from grid_balance import *
 
 def a_star(start):
     frontier = []
