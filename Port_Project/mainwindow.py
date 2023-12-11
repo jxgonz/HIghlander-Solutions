@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from login import *
 from ship_grid import *
 from add_containers import*
-from grid import *
+from grid_balance import *
 from aStar_balance import *
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from datetime import datetime
