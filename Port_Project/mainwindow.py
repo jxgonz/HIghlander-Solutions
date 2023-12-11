@@ -12,6 +12,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from login import *
 from ship_grid import *
 from add_containers import*
+from grid import *
+from aStar_balance import *
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from datetime import datetime
 import re
@@ -77,9 +79,24 @@ class Ui_MainWindow(QMainWindow):
         self.shipGrid = None # Set ship grid window to none to show it has not been open yet
         self.container_names = []
         self.weights = []
+        self.xCoords = []
+        self.yCoords = []
         self.coords = []
+        
         # AI Algo in add_containers.py needs fileName
         self.fileName = ""
+        
+        self.inital_ship_grid = None
+        self.solution = None
+        self.solution_trace = []
+        self.solution_len = 0
+        self.solution_count = 1
+        self.coord_solution_steps = []
+
+        # Make ship inventory grid 9x12 and initialize with all 0s
+        self.inventory_array = [[0 for col in range(0,12)] for row in range(0,9)]
+        # Make buffer inventory grid 4x24 and initialize with all 0s 
+        self.buffer_inventory = [[0 for col in range(0,24)] for row in range(0,5)] 
 
         #Connecting buttons to functions
         self.pushButton_uploadManifest.clicked.connect(self.upload_manifest)
@@ -102,7 +119,6 @@ class Ui_MainWindow(QMainWindow):
             return
         # Open file and read each line
         file = open(name, 'r')
-        coords, weights, container_names = [], [], []
 
         # AI Algo in AddContainers.py needs fileName
         self.fileName = file
@@ -111,20 +127,46 @@ class Ui_MainWindow(QMainWindow):
             # Remove trailed newline character and brackets/paraenthesis from each line
             line = re.sub(r"[\([{})\]]", "", line)
             line = line.rstrip('\n')
-            # Save x coordinate from current line and save rest of line in extra variable
-            coord, extra = line.lstrip().split(' ', 1)
-            # Remove trailing comma from coordinates
-            coord = coord[:-1] 
+            # Save x,y coordinate from current line and save rest of line in extra variable
+            x, extra = line.lstrip().split(',', 1)
+            y, extra = extra.lstrip().split(',', 1)
             # Save weight current current line and save rest of line in extra variable
             weight, extra = extra.lstrip().split(',', 1)
             # Save container name current line
             cont_name = extra.lstrip().split(',', 1)
             cont_name = cont_name[0]
 
+
             # Append values from current line to list
-            self.coords.append(coord)
+            self.coords.append(f"{x},{y}")
+            self.xCoords.append(x)
+            self.yCoords.append(y)
             self.weights. append(weight)
             self.container_names.append(cont_name)
+
+            # Map string values to integer values
+            self.xCoords = list(map(int, self.xCoords))
+            self.yCoords = list(map(int, self.yCoords))
+            self.weights = list(map(int, self.weights))
+
+        # Load 2d array with container objects and attributes
+        index = 0
+        for row in range(0,9):
+            for col in range(0,12):
+                if row == 8:
+                    self.inventory_array[row][col] = Container("UNUSED", col+1, row+1, 0)
+                else:
+                    self.inventory_array[row][col] = Container(self.container_names[index], self.yCoords[index], self.xCoords[index], self.weights[index])
+                index = index + 1
+
+        # Load initial buffer with empty container objects
+        for row in range(0,5):
+            for col in range(0,24):
+                self.buffer_inventory[row][col] = Container("UNUSED", col+1, row+1, 0)
+
+        # Initial state of grid
+        self.inital_ship_grid = Grid(self.inventory_array, self.buffer_inventory, removeRow=None, removeCol=None, parent=None, craneRow=8, craneCol=0, craneContainer=None)
+        
         # Show operation selection window
         self.showDialog()
 
@@ -145,7 +187,31 @@ class Ui_MainWindow(QMainWindow):
             msgBox.close()
         # If user would like to perform balance operation
         else:
+            self.solution = a_star(self.inital_ship_grid)
             msgBox.close()
+            if self.solution == None:
+                print(self.solution)
+            
+            if self.solution:
+                
+                while self.solution:
+                    self.solution_trace.append(self.solution)
+                    if self.solution.coordinate_tracking[0] != None:
+                        self.coord_solution_steps.append(self.solution.coordinate_tracking)
+                        print(self.coord_solution_steps[0][0][0])
+                    self.solution = self.solution.parent
+                    self.solution_len += 1
+                    
+                print()
+                while self.solution_trace:
+                    current_pop = self.solution_trace.pop()
+                    current_pop.printGridWeights()
+                    self.solution_count = self.solution_count + 1
+                
+                print("Goal!!!\n")       
+                print(f"The depth of the goal node was {self.solution_len}.\n")
+            else:
+                print("No solution found")
             #open window to display stepwise balance solution here
             print("Balance Operation selected. Open window to display stepwise balance solution here.")
 
