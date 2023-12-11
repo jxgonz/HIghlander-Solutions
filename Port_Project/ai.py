@@ -404,10 +404,10 @@ def a_star(problem):
         
   return None, maxLength          
   
-
-
-def driver():
-  fileName = "ShipCase1.txt"
+# Method that calls AI algorithm on problem
+# Needs fileName, list of strings of offLoad,
+# list of strings of onLoad containers
+def driver(self, fileName, offLoad, onLoad):
   data = pd.read_csv(fileName, header=None)
 
   data[0] = data[0].str.strip('[')
@@ -448,9 +448,56 @@ def driver():
     ro = None
 
   crane = Crane()
-  problem = Problem(ship, buffer, crane, ["Cat"], ["Frog"])
+  problem = Problem(ship, buffer, crane, offLoad, onLoad)
   
   # uniform_cost(problem)
   a_star(problem)
+
+# def driver():
+#   fileName = "ShipCase1.txt"
+#   data = pd.read_csv(fileName, header=None)
+
+#   data[0] = data[0].str.strip('[')
+#   data[1] = data[1].str.strip(']')
+#   data[3] = data[3].str.strip()
+
+#   data[0] = pd.to_numeric(data[0])
+#   data[1] = pd.to_numeric(data[1])
+
+#   # SHIP SETUP
+#   ship = []
+#   for r in range(12):
+#     row = []
+#     for c in range(9):
+#       row.append(Container("BLANK",()))
+#     ship.append(row)
+#     row = None
+
+#   k = 0
+#   for i in range(0,8):
+#     for j in range(0,12):
+#       containerName = data.at[k,3]
+#       ship[j][i] = Container(containerName, (j,i))
+#       # Creates a Container at (i, j) that still needs to be told
+#       # if needed to be unloaded or loaded (if at all needed)
+#       k = k + 1
+  
+#   for i in range(0,12):
+#     ship[i][8] = Container("UNUSED", (i,8))
+
+#   # BUFFER SETUP
+#   buffer = []
+#   for r in range(24):
+#     ro = []
+#     for c in range(4):
+#       ro.append(Container("UNUSED", (r,c)))
+#     buffer.append(ro)
+#     ro = None
+
+#   crane = Crane()
+#   problem = Problem(ship, buffer, crane, ["Cat"], ["Frog"])
+  
+#   # uniform_cost(problem)
+#   a_star(problem)
 
 driver()

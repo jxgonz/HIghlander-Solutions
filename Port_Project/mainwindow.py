@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from login import *
 from ship_grid import *
+from add_containers import*
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from datetime import datetime
 import re
@@ -77,6 +78,8 @@ class Ui_MainWindow(QMainWindow):
         self.container_names = []
         self.weights = []
         self.coords = []
+        # AI Algo in add_containers.py needs fileName
+        self.fileName = ""
 
         #Connecting buttons to functions
         self.pushButton_uploadManifest.clicked.connect(self.upload_manifest)
@@ -100,6 +103,9 @@ class Ui_MainWindow(QMainWindow):
         # Open file and read each line
         file = open(name, 'r')
         coords, weights, container_names = [], [], []
+
+        # AI Algo in AddContainers.py needs fileName
+        self.fileName = file
 
         for line in file:
             # Remove trailed newline character and brackets/paraenthesis from each line
@@ -151,6 +157,7 @@ class Ui_MainWindow(QMainWindow):
             self.shipGrid.container_names = self.container_names
             self.shipGrid.weights = self.weights
             self.shipGrid.coords = self.coords
+            self.shipGrid.fileName = self.fileName
 
             # Set color of ship grid cells based on NAN, Unused, or Used
             i = 0

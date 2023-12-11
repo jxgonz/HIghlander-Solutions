@@ -49,6 +49,9 @@ class Ui_Form(QWidget, object):
         self.weights = []
         self.coords = []
 
+        # AI Algo needs fileName
+        self.fileName = ""
+
         #Adding label for Ship Grid
         self.label_shipInventory = QtWidgets.QLabel(self)
         self.label_shipInventory.setGeometry(QtCore.QRect(0, 40, 801, 41))
@@ -108,6 +111,21 @@ class Ui_Form(QWidget, object):
         self.fileMenu.aboutToShow.connect(self.show_main_window)
         self.loginWindow.aboutToShow.connect(self.show_login_window)
         
+    # Converts coordinates of container to their strings. This is needed for
+    # converting the AI Algo
+    def coordsToStrings(self, containerCoords):
+        containerStrs = []
+        for coord in containerCoords:
+            # Reverse lookup the index of the coordinate since
+            # these arrays are parallel. That way we can just call
+            # the container name from that coordinates index!
+            print(coord)
+            strIndex = self.coords.index(coord)
+            containerStr = self.container_names[strIndex]
+            containerStrs.append(containerStr)
+        print(containerStrs)
+        return containerStrs
+
     def remove_done(self):
         # If add container window is not open, open it
         if self.addContainerWindow is None:
@@ -116,7 +134,13 @@ class Ui_Form(QWidget, object):
             self.addContainerWindow.container_names = self.container_names
             self.addContainerWindow.weights = self.weights
             self.addContainerWindow.coords = self.coords
+
+            # AI Algo needs strings of containers to remove, not the coordinates
+            # Here, i'll convert the list of container coords to their names
+            self.containers_remove = self.coordsToStrings(self.containers_remove)
             self.addContainerWindow.containers_remove = self.containers_remove
+
+            self.addContainerWindow.fileName = self.fileName
         # Set login window to application modal so that it must be closed before main window can be used
         # This solves the issue of when you open the login window a second time it will be behind the main window
         self.addContainerWindow.setWindowModality(QtCore.Qt.ApplicationModal)
