@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from login import *
+from ai import *
 
 
 class addContainers_Ui_Form(QWidget, object):
@@ -102,7 +103,7 @@ class addContainers_Ui_Form(QWidget, object):
 
     def noContainersToLoad(self):
         # Call heuristic algorithm here and below in showDialog() function when the user is done adding containers
-        pass
+        return driver(self.fileName, self.containers_remove, self.containers_add)
 
     def add_done(self):
         # If the user enters a container name and clicks "done"
@@ -148,6 +149,7 @@ class addContainers_Ui_Form(QWidget, object):
             msgBox.close()
             #call heuristic algorithm function here and then open window to display stepwise solution
             print("Adding Containers Complete. Need to open step wise solution window here.")
+            return driver(self.fileName, self.containers_remove, self.containers_add)
 
     def show_shipGrid_window(self):
         self.close()

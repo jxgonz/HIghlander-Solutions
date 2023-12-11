@@ -407,7 +407,7 @@ def a_star(problem):
 # Method that calls AI algorithm on problem
 # Needs fileName, list of strings of offLoad,
 # list of strings of onLoad containers
-def driver(self, fileName, offLoad, onLoad):
+def driver(fileName, offLoad, onLoad):
   data = pd.read_csv(fileName, header=None)
 
   data[0] = data[0].str.strip('[')
@@ -451,7 +451,7 @@ def driver(self, fileName, offLoad, onLoad):
   problem = Problem(ship, buffer, crane, offLoad, onLoad)
   
   # uniform_cost(problem)
-  a_star(problem)
+  return a_star(problem)
 
 # def driver():
 #   fileName = "ShipCase1.txt"
