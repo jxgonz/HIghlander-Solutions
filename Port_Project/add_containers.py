@@ -69,10 +69,14 @@ class addContainers_Ui_Form(QWidget, object):
 
         # List that holds containers selected to be added to ship
         self.containers_add = []
+        # Note that here, containers_remove is now a list of strings!
         self.containers_remove = []
         self.container_names = []
         self.weights = []
         self.coords = []
+
+        # AI Algo needs file to process 2D arrays
+        self.fileName = ""
 
         #Adding Tool bar for back button 
         self.layout = QVBoxLayout()
