@@ -175,6 +175,12 @@ class Ui_MainWindow(QMainWindow):
         # Initial state of grid
         self.inital_ship_grid = Grid(self.inventory_array, self.buffer_inventory, removeRow=None, removeCol=None, parent=None, craneRow=8, craneCol=0, craneContainer=None)
         
+        # Writes to lof file
+        f = open('log.txt','a') #append
+        timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
+        f.write("<" + timeStamp + "> User uploaded a manifest\n")
+        f.close()
+
         # Show operation selection window
         self.showDialog()
 
@@ -190,10 +196,19 @@ class Ui_MainWindow(QMainWindow):
         returnValue = msgBox.exec()
         # If user would like to perform transfer operation
         if returnValue == 1:
+            f = open('log.txt','a') #append
+            timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
+            f.write("<" + timeStamp + "> Transfer operation in progress...\n")
+            f.close()
             self.populateShipGrid()
             msgBox.close()
         # If user would like to perform balance operation
         else:
+            # Writes to log file
+            f = open('log.txt','a') #append
+            timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
+            f.write("<" + timeStamp + "> Balancing operation in progress...\n")
+            f.close()
             self.solution = a_star(self.inital_ship_grid)
             self.coord_solution_steps.clear()
             msgBox.close()

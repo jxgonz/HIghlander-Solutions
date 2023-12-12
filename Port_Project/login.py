@@ -78,8 +78,8 @@ class Ui_Dialog_LoginPage(QDialog, object):
             # mm/dd/YY H:M
             timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
 
-            #Opens the output.txt file and appends the username to it and closes it
-            f = open('output.txt','a') #append
+            #Opens the log.txt file and appends the username to it and closes it
+            f = open('log.txt','a') #append
             f.write("<" + timeStamp + "> [" + self.username + "] Logged in\n")
             f.close()
 

@@ -33,7 +33,7 @@ class addContainers_Ui_Form(QWidget, object):
         self.label_containerName = QtWidgets.QLabel(self)
         self.label_containerName.setGeometry(QtCore.QRect(0, 240, 801, 41))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(13)
         font.setBold(True)
         self.label_containerName.setFont(font)
         self.label_containerName.setAlignment(QtCore.Qt.AlignCenter)

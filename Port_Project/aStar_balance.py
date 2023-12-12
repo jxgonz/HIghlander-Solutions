@@ -13,10 +13,6 @@ def a_star(start):
     iter = 0
     while True:
         if not frontier:
-            print()
-            print(f"To solve this problem the search algorithm expanded a total of {len(visited)} nodes.")
-            print(f"The maximum number of nodes in the queue at any one time: {max_frontier_size}.")
-            print()
             return None #problem is impossible to solve
         
         if(len(frontier) > max_frontier_size):
@@ -26,10 +22,6 @@ def a_star(start):
         current_node = frontier.pop()
         
         if current_node.check_goal() >= goal and current_node.check_bufferEmpty():
-            print()
-            print(f"To solve this problem the search algorithm expanded a total of {len(visited)} nodes.")
-            print(f"The maximum number of nodes in the queue at any one time: {max_frontier_size}.")
-
             return current_node
             
         visited.append(current_node)
