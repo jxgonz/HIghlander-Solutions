@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from login import *
+from add_logComment import *
 from add_containers import *
 
 
@@ -41,6 +42,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
         self.balanceCounter = 0
         self.balanceSteps = []
         self.total_balance_cost = 0
+        self.commentWindow = None
 
         # AI Algo needs fileName
         self.fileName = ""
@@ -54,18 +56,27 @@ class Ui_Form_BalanceSteps(QWidget, object):
         self.label_shipInventory.setFont(font)
         self.label_shipInventory.setAlignment(QtCore.Qt.AlignCenter)
         self.label_shipInventory.setObjectName("label_shipInventory")
-        self.label_shipInventory.setText("Ship Inventory")
+        self.label_shipInventory.setText("Balancing Steps")
 
         #Adding label for Ship Grid
         self.label_shipGrid = QtWidgets.QLabel(self)
         self.label_shipGrid.setGeometry(QtCore.QRect(0, 80, 801, 41))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(11)
         font.setBold(True)
         self.label_shipGrid.setFont(font)
         self.label_shipGrid.setAlignment(QtCore.Qt.AlignCenter)
         self.label_shipGrid.setObjectName("label_shipGrid")
-        self.label_shipGrid.setText("Please Select Any Blue Container To Remove From Ship")
+        self.label_shipGrid.setText("Please move the green container to the red area. Click the button once complete.")
+
+        # Adding the done button for when user is finished selecting containers to be removed
+        self.pushButton_addComment = QtWidgets.QPushButton(self)
+        self.pushButton_addComment.setGeometry(QtCore.QRect(675, 30, 120, 40))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.pushButton_addComment.setFont(font)
+        self.pushButton_addComment.setObjectName("pushButton_addComment")
+        self.pushButton_addComment.setText("Add comment")
 
         # Adding the done button for when user is finished selecting containers to be removed
         self.pushButton_next = QtWidgets.QPushButton(self)
@@ -112,6 +123,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
         #Connecting buttons to functions
         self.pushButton_next.clicked.connect(self.next_step)
         self.pushButton_removeDone.clicked.connect(self.remove_done)
+        self.pushButton_addComment.clicked.connect(self.addComment_clicked)
         self.fileMenu.aboutToShow.connect(self.show_main_window)
         self.loginWindow.aboutToShow.connect(self.show_login_window)
         
@@ -130,6 +142,15 @@ class Ui_Form_BalanceSteps(QWidget, object):
         print(containerStrs)
         return containerStrs
 
+    def addComment_clicked(self):
+        # If login window is not open, open it
+        if self.commentWindow is None:
+            self.commentWindow = Ui_Dialog_AddComment(self)
+        # Set login window to application modal so that it must be closed before main window can be used
+        # This solves the issue of when you open the login window a second time it will be behind the main window
+        self.commentWindow.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.commentWindow.show()
+
     def next_step(self):
         # Set old coords to grey
         self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).setBackground(QtGui.QColor(169,169,169))
@@ -138,6 +159,12 @@ class Ui_Form_BalanceSteps(QWidget, object):
         self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][1][0], self.balanceSteps[self.balanceCounter][1][1]).setBackground(QtGui.QColor(0,0,255))
         self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][1][0], self.balanceSteps[self.balanceCounter][1][1]).setText(container_name)
         self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).setText("")
+        
+        # Writes to log file
+        f = open('log.txt','a') #append
+        timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
+        f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(8-self.balanceSteps[self.balanceCounter][0][0])+", "+str(self.balanceSteps[self.balanceCounter][0][1])+"] to ["+str(8-self.balanceSteps[self.balanceCounter][1][0])+", "+str(self.balanceSteps[self.balanceCounter][1][1])+"]\n")
+        f.close()
 
         self.balanceCounter = self.balanceCounter + 1
         if self.balanceCounter >= len(self.balanceSteps):
@@ -160,10 +187,22 @@ class Ui_Form_BalanceSteps(QWidget, object):
             self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][1][0], self.balanceSteps[self.balanceCounter][1][1]).setBackground(QtGui.QColor(0,0,255))
             self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][1][0], self.balanceSteps[self.balanceCounter][1][1]).setText(container_name)
             self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).setText("")
+            # Writes to log file
+            f = open('log.txt','a') #append
+            timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
+            f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(8-self.balanceSteps[self.balanceCounter][0][0])+", "+str(self.balanceSteps[self.balanceCounter][0][1])+"] to ["+str(8-self.balanceSteps[self.balanceCounter][1][0])+", "+str(self.balanceSteps[self.balanceCounter][1][1])+"]\n")
+            f.close()
 
         # If add container window is not open, open it
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Information)
+
+        # Writes to log file
+        f = open('log.txt','a') #append
+        timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
+        f.write("<" + timeStamp + "> Balancing Complete!\n")
+        f.close()
+
         msgBox.setText(f"Balancing Complete! \nThe total number of operations was {len(self.balanceSteps)}.\n The total time taken was {self.total_balance_cost} minutes.")
         msgBox.setWindowTitle("Balancing Complete")
         msgBox.setStandardButtons(QMessageBox.Ok)
