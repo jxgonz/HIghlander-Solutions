@@ -359,7 +359,7 @@ def uniform_cost(problem):
 
 def a_star(problem):
   maxLength = 0
-  root = Node(problem, None, 1, 1)
+  root = Node(problem, None, 0, 0)
   tree = Tree(root)
   frontier = {root}
   explored = set()
@@ -371,13 +371,23 @@ def a_star(problem):
     if problem.goal_test(current_node.state):
         path=[]
         while current_node:
-          path.append(current_node)
+          step=[]
+          if current_node.parent == None:
+            step.append(current_node.state.crane.coordinates)
+            step.append(current_node.state.crane.coordinates)
+            step.append(current_node.h)
+          else:
+            step.append(current_node.parent.state.crane.coordinates)
+            step.append(current_node.state.crane.coordinates)
+            step.append(current_node.h)
+          # path.append(current_node)
           current_node = current_node.parent
+          path.append(step)
         path.reverse()
         for node in path:
-          print(np.matrix(node.state.ship))
+          print(node)
           print()
-        return path, maxLength
+        return path
     
     explored.add(current_node)
     
@@ -387,7 +397,7 @@ def a_star(problem):
       if new_state is None:
         continue
       
-      new_node = Node(new_state, current_node, 1, 1)
+      new_node = Node(new_state, current_node, 0, 0)
       new_node.g = current_node.g + 1
       new_node.h = problem.heuristic(new_node, i)
       
