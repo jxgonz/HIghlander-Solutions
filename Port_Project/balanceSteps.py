@@ -38,7 +38,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
 
         #Adding Widget functionality for buffer
         self.tableWidget_Buffer = QtWidgets.QTableWidget(Form)
-        self.tableWidget_Buffer.setGeometry(QtCore.QRect(10, 280, 1180, 202))
+        self.tableWidget_Buffer.setGeometry(QtCore.QRect(10, 280, 1178, 202))
         self.tableWidget_Buffer.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
         self.tableWidget_Buffer.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidget_Buffer.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
@@ -199,8 +199,8 @@ class Ui_Form_BalanceSteps(QWidget, object):
         self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).setBackground(QtGui.QColor(169,169,169))
         container_name = self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).text()
         # Set new container coords to blue
-        self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][1][0], self.balanceSteps[self.balanceCounter][1][1]).setBackground(QtGui.QColor(0,0,255))
-        self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][1][0], self.balanceSteps[self.balanceCounter][1][1]).setText(container_name)
+        self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][2][0], self.balanceSteps[self.balanceCounter][2][1]).setBackground(QtGui.QColor(0,0,255))
+        self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][2][0], self.balanceSteps[self.balanceCounter][2][1]).setText(container_name)
         self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).setText("")
 
         # Update container names and weights arrays with new container location
@@ -216,7 +216,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
         i = 0
         for row in range (8,0,-1):
             for col in range (12):
-                if row == (8-self.balanceSteps[self.balanceCounter][1][0]) and col == (self.balanceSteps[self.balanceCounter][1][1]):
+                if row == (8-self.balanceSteps[self.balanceCounter][2][0]) and col == (self.balanceSteps[self.balanceCounter][2][1]):
                             self.container_names[i] = container_name
                             self.weights[i] = self.container_weight
                 i=i+1
@@ -224,7 +224,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
         # Writes to log file
         f = open('log.txt','a') #append
         timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
-        f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(self.balanceSteps[self.balanceCounter][0][0]+1)+", "+str(self.balanceSteps[self.balanceCounter][0][1]+1)+"] to ["+str(self.balanceSteps[self.balanceCounter][1][0]+1)+", "+str(self.balanceSteps[self.balanceCounter][1][1]+1)+"]\n")
+        f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(self.balanceSteps[self.balanceCounter][0][0]+1)+", "+str(self.balanceSteps[self.balanceCounter][0][1]+1)+"] to ["+str(self.balanceSteps[self.balanceCounter][2][0]+1)+", "+str(self.balanceSteps[self.balanceCounter][2][1]+1)+"]\n")
         f.close()
 
         self.balanceCounter = self.balanceCounter + 1
@@ -235,9 +235,9 @@ class Ui_Form_BalanceSteps(QWidget, object):
             # Set intial coords to green
             self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).setBackground(QtGui.QColor(0,255,0))
             # Set new coords to red
-            self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][1][0], self.balanceSteps[self.balanceCounter][1][1]).setBackground(QtGui.QColor(255,0,0))
+            self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][2][0], self.balanceSteps[self.balanceCounter][2][1]).setBackground(QtGui.QColor(255,0,0))
             # Add to total cost
-            self.total_balance_cost = self.total_balance_cost + self.balanceSteps[self.balanceCounter][2]
+            self.total_balance_cost = self.total_balance_cost + self.balanceSteps[self.balanceCounter][4]
 
     def remove_done(self):
         if len(self.balanceSteps) == 1:
@@ -245,13 +245,13 @@ class Ui_Form_BalanceSteps(QWidget, object):
             self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).setBackground(QtGui.QColor(169,169,169))
             container_name = self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).text()
             # Set new container coords to blue
-            self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][1][0], self.balanceSteps[self.balanceCounter][1][1]).setBackground(QtGui.QColor(0,0,255))
-            self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][1][0], self.balanceSteps[self.balanceCounter][1][1]).setText(container_name)
+            self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][2][0], self.balanceSteps[self.balanceCounter][2][1]).setBackground(QtGui.QColor(0,0,255))
+            self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][2][0], self.balanceSteps[self.balanceCounter][2][1]).setText(container_name)
             self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).setText("")
             # Writes to log file
             f = open('log.txt','a') #append
             timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
-            f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(self.balanceSteps[self.balanceCounter][0][0]+1)+", "+str(self.balanceSteps[self.balanceCounter][0][1]+1)+"] to ["+str(self.balanceSteps[self.balanceCounter][1][0]+1)+", "+str(self.balanceSteps[self.balanceCounter][1][1]+1)+"]\n")
+            f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(self.balanceSteps[self.balanceCounter][0][0]+1)+", "+str(self.balanceSteps[self.balanceCounter][0][1]+1)+"] to ["+str(self.balanceSteps[self.balanceCounter][2][0]+1)+", "+str(self.balanceSteps[self.balanceCounter][2][1]+1)+"]\n")
             f.close()
 
             # Update container names and weights arrays with new container location
@@ -267,7 +267,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
             i = 0
             for row in range (8,0,-1):
                 for col in range (12):
-                    if row == (8-self.balanceSteps[self.balanceCounter][1][0]) and col == (self.balanceSteps[self.balanceCounter][1][1]):
+                    if row == (8-self.balanceSteps[self.balanceCounter][2][0]) and col == (self.balanceSteps[self.balanceCounter][2][1]):
                                 self.container_names[i] = container_name
                                 self.weights[i] = self.container_weight
                     i=i+1
