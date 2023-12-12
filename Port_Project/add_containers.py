@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from login import *
+from ai import *
 
 
 class addContainers_Ui_Form(QWidget, object):
@@ -32,7 +33,7 @@ class addContainers_Ui_Form(QWidget, object):
         self.label_containerName = QtWidgets.QLabel(self)
         self.label_containerName.setGeometry(QtCore.QRect(0, 240, 801, 41))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(13)
         font.setBold(True)
         self.label_containerName.setFont(font)
         self.label_containerName.setAlignment(QtCore.Qt.AlignCenter)
@@ -69,6 +70,14 @@ class addContainers_Ui_Form(QWidget, object):
 
         # List that holds containers selected to be added to ship
         self.containers_add = []
+        # Note that here, containers_remove is now a list of strings!
+        self.containers_remove = []
+        self.container_names = []
+        self.weights = []
+        self.coords = []
+
+        # AI Algo needs file to process 2D arrays
+        self.fileName = ""
 
         #Adding Tool bar for back button 
         self.layout = QVBoxLayout()
@@ -94,7 +103,7 @@ class addContainers_Ui_Form(QWidget, object):
 
     def noContainersToLoad(self):
         # Call heuristic algorithm here and below in showDialog() function when the user is done adding containers
-        pass
+        return driver(self.fileName, self.containers_remove, self.containers_add)
 
     def add_done(self):
         # If the user enters a container name and clicks "done"
@@ -140,6 +149,7 @@ class addContainers_Ui_Form(QWidget, object):
             msgBox.close()
             #call heuristic algorithm function here and then open window to display stepwise solution
             print("Adding Containers Complete. Need to open step wise solution window here.")
+            return driver(self.fileName, self.containers_remove, self.containers_add)
 
     def show_shipGrid_window(self):
         self.close()
