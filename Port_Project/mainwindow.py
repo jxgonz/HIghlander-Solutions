@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from login import *
 from ship_grid import *
 from add_containers import*
+from balanceSteps import *
 from grid_balance import *
 from aStar_balance import *
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
@@ -77,11 +78,13 @@ class Ui_MainWindow(QMainWindow):
         self.menubar.addAction(self.menuLogin.menuAction())
         self.LoginWindow = None # Set login window to none to show it has not been open yet
         self.shipGrid = None # Set ship grid window to none to show it has not been open yet
+        self.balanceSteps = None
         self.container_names = []
         self.weights = []
         self.xCoords = []
         self.yCoords = []
         self.coords = []
+        self.total_balance_cost = 0
         
         # AI Algo in add_containers.py needs fileName
         self.fileName = ""
@@ -112,6 +115,11 @@ class Ui_MainWindow(QMainWindow):
         self.LoginWindow.show()
         
     def upload_manifest(self):
+        self.coords.clear()
+        self.xCoords.clear()
+        self.yCoords.clear()
+        self.weights.clear()
+        self.container_names.clear()
         # Open file dialog and get file name
         name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', filter="(*.txt)", options=QtWidgets.QFileDialog.DontUseNativeDialog)
         # If no file is selected, return
@@ -180,7 +188,6 @@ class Ui_MainWindow(QMainWindow):
         transfer_button = msgBox.addButton('Transfer', QtWidgets.QMessageBox.YesRole)
 
         returnValue = msgBox.exec()
-        print(returnValue)
         # If user would like to perform transfer operation
         if returnValue == 1:
             self.populateShipGrid()
@@ -188,32 +195,86 @@ class Ui_MainWindow(QMainWindow):
         # If user would like to perform balance operation
         else:
             self.solution = a_star(self.inital_ship_grid)
+            self.coord_solution_steps.clear()
             msgBox.close()
             if self.solution == None:
                 print(self.solution)
             
             if self.solution:
-                
+
                 while self.solution:
                     self.solution_trace.append(self.solution)
                     if self.solution.coordinate_tracking[0] != None:
+                        self.solution.coordinate_tracking.append(self.solution.manhattan_distance)
                         self.coord_solution_steps.append(self.solution.coordinate_tracking)
-                        print(self.coord_solution_steps[0][0][0])
                     self.solution = self.solution.parent
                     self.solution_len += 1
-                    
-                print()
-                while self.solution_trace:
-                    current_pop = self.solution_trace.pop()
-                    current_pop.printGridWeights()
-                    self.solution_count = self.solution_count + 1
-                
-                print("Goal!!!\n")       
-                print(f"The depth of the goal node was {self.solution_len}.\n")
+
+                # Open window and display steps to balance ship
+                self.populateBalanceSteps()
+
             else:
-                print("No solution found")
-            #open window to display stepwise balance solution here
-            print("Balance Operation selected. Open window to display stepwise balance solution here.")
+                msgBox = QMessageBox()
+                msgBox.setIcon(QMessageBox.Critical)
+                msgBox.setText("No solution found. Ship cannot be balanced!")
+                msgBox.setWindowTitle("No Solution")
+                msgBox.setStandardButtons(QMessageBox.Ok)
+                msgBox.exec()
+
+    def populateBalanceSteps(self):
+        containerNames = self.container_names
+        self.total_balance_cost = 0
+        #if self.balanceSteps is None:
+        self.balanceSteps = Ui_Form_BalanceSteps(self)
+
+        if len(self.coord_solution_steps) == 1:
+            self.balanceSteps.pushButton_next.hide()
+            self.balanceSteps.pushButton_removeDone.show()
+
+        # Pass all manifest info to next window (balanceSteps)
+        self.balanceSteps.container_names = self.container_names
+        self.balanceSteps.weights = self.weights
+        self.balanceSteps.coords = self.coords
+        self.balanceSteps.fileName = self.fileName
+
+        # Set color of ship grid cells based on NAN, Unused, or Used
+        i = 0
+        for row in range (8,0,-1):
+            for column in range (12):
+                if containerNames[i] == "NAN":
+                    # Set nan cells to black color
+                    self.balanceSteps.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                    self.balanceSteps.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,0))
+                    # Set nan cells to unclickable
+                    self.balanceSteps.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
+                elif containerNames[i] == "UNUSED":
+                    # Set unused cells to gray color
+                    self.balanceSteps.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                    self.balanceSteps.tableWidget.item(row, column).setBackground(QtGui.QColor(169,169,169))
+                    # Set unused cells to unclickable
+                    self.balanceSteps.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
+                else:
+                    # Set used cells to blue color
+                    self.balanceSteps.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                    self.balanceSteps.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
+                    self.balanceSteps.tableWidget.item(row, column).setText(containerNames[i])
+                    self.balanceSteps.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
+
+                i=i+1
+
+        # Set intial coords to green
+        self.balanceSteps.tableWidget.item(8-self.coord_solution_steps[0][0][0], self.coord_solution_steps[0][0][1]).setBackground(QtGui.QColor(0,255,0))
+        # Set intial coords to red
+        self.balanceSteps.tableWidget.item(8-self.coord_solution_steps[0][1][0], self.coord_solution_steps[0][1][1]).setBackground(QtGui.QColor(255,0,0))
+        # Set intial coords to red
+        self.total_balance_cost = self.total_balance_cost + self.coord_solution_steps[0][2]
+
+        self.balanceSteps.balanceSteps = self.coord_solution_steps
+        self.balanceSteps.total_balance_cost = self.total_balance_cost
+
+        self.balanceSteps.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.balanceSteps.tableWidget.clearSelection()
+        self.balanceSteps.show()
 
     def populateShipGrid(self):
         containerNames = self.container_names
