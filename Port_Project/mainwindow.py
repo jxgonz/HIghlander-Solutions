@@ -26,6 +26,7 @@ class Ui_MainWindow(QMainWindow):
         self.setObjectName("MainWindow")
         self.resize(803, 600)
         self.setWindowTitle("MainWindow")
+        self.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.rect().center())
         self.setupUi()
 
 

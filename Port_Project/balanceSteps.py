@@ -11,14 +11,15 @@ class Ui_Form_BalanceSteps(QWidget, object):
         super(Ui_Form_BalanceSteps,self).__init__()
         self.parent = object
         self.setObjectName("Balance Steps")
-        self.resize(803, 600)
+        self.resize(1800, 600)
         self.setAutoFillBackground(False)
+        self.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.rect().center())
         self.setupUi(self)
 
     def setupUi(self, Form):
-        #Adding Widget functionality
+        #Adding Widget functionality for ship
         self.tableWidget = QtWidgets.QTableWidget(Form)
-        self.tableWidget.setGeometry(QtCore.QRect(110, 130, 590, 362))
+        self.tableWidget.setGeometry(QtCore.QRect(1200, 122, 590, 362))
         self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
         self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
@@ -34,6 +35,25 @@ class Ui_Form_BalanceSteps(QWidget, object):
         self.tableWidget.verticalHeader().setDefaultSectionSize(40)
         self.tableWidget.verticalHeader().setMinimumSectionSize(40)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
+
+        #Adding Widget functionality for buffer
+        self.tableWidget_Buffer = QtWidgets.QTableWidget(Form)
+        self.tableWidget_Buffer.setGeometry(QtCore.QRect(10, 280, 1180, 202))
+        self.tableWidget_Buffer.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
+        self.tableWidget_Buffer.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidget_Buffer.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
+        self.tableWidget_Buffer.setCornerButtonEnabled(True)
+        self.tableWidget_Buffer.setRowCount(5)
+        self.tableWidget_Buffer.setColumnCount(24)
+        self.tableWidget_Buffer.setObjectName("tableWidget_Buffer")
+        self.tableWidget_Buffer.horizontalHeader().setVisible(False)
+        self.tableWidget_Buffer.horizontalHeader().setDefaultSectionSize(40)
+        self.tableWidget_Buffer.horizontalHeader().setHighlightSections(True)
+        self.tableWidget_Buffer.horizontalHeader().setMinimumSectionSize(40)
+        self.tableWidget_Buffer.verticalHeader().setVisible(False)
+        self.tableWidget_Buffer.verticalHeader().setDefaultSectionSize(40)
+        self.tableWidget_Buffer.verticalHeader().setMinimumSectionSize(40)
+        self.tableWidget_Buffer.verticalHeader().setStretchLastSection(False)
         self.LoginWindow = None
         self.addContainerWindow = None
         self.container_names = []
@@ -45,12 +65,34 @@ class Ui_Form_BalanceSteps(QWidget, object):
         self.commentWindow = None
         self.container_weight = 0
 
+        #Adding label for Ship
+        self.label_ship = QtWidgets.QLabel(self)
+        self.label_ship.setGeometry(QtCore.QRect(1200, 320, 590, 362))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(True)
+        self.label_ship.setFont(font)
+        self.label_ship.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_ship.setObjectName("label_ship")
+        self.label_ship.setText("Ship")
+
+        #Adding label for Buffer
+        self.label_buffer = QtWidgets.QLabel(self)
+        self.label_buffer.setGeometry(QtCore.QRect(10, 400, 1180, 202))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(True)
+        self.label_buffer.setFont(font)
+        self.label_buffer.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_buffer.setObjectName("label_buffer")
+        self.label_buffer.setText("Buffer")
+        
         # AI Algo needs fileName
         self.fileName = ""
 
         #Adding label for Ship Grid
         self.label_shipInventory = QtWidgets.QLabel(self)
-        self.label_shipInventory.setGeometry(QtCore.QRect(0, 40, 801, 41))
+        self.label_shipInventory.setGeometry(QtCore.QRect(0, 40, 1800, 41))
         font = QtGui.QFont()
         font.setPointSize(22)
         font.setBold(True)
@@ -61,7 +103,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
 
         #Adding label for Ship Grid
         self.label_shipGrid = QtWidgets.QLabel(self)
-        self.label_shipGrid.setGeometry(QtCore.QRect(0, 80, 801, 41))
+        self.label_shipGrid.setGeometry(QtCore.QRect(0, 80, 1800, 41))
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setBold(True)
@@ -72,7 +114,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
 
         # Adding the done button for when user is finished selecting containers to be removed
         self.pushButton_addComment = QtWidgets.QPushButton(self)
-        self.pushButton_addComment.setGeometry(QtCore.QRect(675, 30, 120, 40))
+        self.pushButton_addComment.setGeometry(QtCore.QRect(10, 30, 120, 40))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.pushButton_addComment.setFont(font)
@@ -81,7 +123,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
 
         # Adding the done button for when user is finished selecting containers to be removed
         self.pushButton_next = QtWidgets.QPushButton(self)
-        self.pushButton_next.setGeometry(QtCore.QRect(330, 500, 141, 61))
+        self.pushButton_next.setGeometry(QtCore.QRect(830, 530, 141, 61))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.pushButton_next.setFont(font)
@@ -90,7 +132,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
 
         # Adding the done button for when user is finished selecting containers to be removed
         self.pushButton_removeDone = QtWidgets.QPushButton(self)
-        self.pushButton_removeDone.setGeometry(QtCore.QRect(330, 500, 141, 61))
+        self.pushButton_removeDone.setGeometry(QtCore.QRect(830, 530, 141, 61))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.pushButton_removeDone.setFont(font)

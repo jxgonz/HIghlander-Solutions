@@ -11,6 +11,7 @@ class addContainers_Ui_Form(QWidget, object):
         self.parent = object
         self.setObjectName("Add Containers")
         self.resize(803, 600)
+        self.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.rect().center())
         self.setAutoFillBackground(False)
         self.setupUi(self)
 
