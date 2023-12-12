@@ -71,3 +71,22 @@
 <12/12/2023 12:47> Balancing operation in progress...
 <12/12/2023 12:47> Container Cat was moved from [1, 2] to [1, 7]
 <12/12/2023 12:47> Balancing Complete!
+<12/12/2023 12:50> User uploaded a manifest
+<12/12/2023 12:50> Balancing operation in progress...
+<12/12/2023 12:51> User uploaded a manifest
+<12/12/2023 12:51> Balancing operation in progress...
+<12/12/2023 12:51> Container Cat was moved from [1, 2] to [1, 7]
+<12/12/2023 12:51> Balancing Complete!
+<12/12/2023 13:13> User uploaded a manifest
+<12/12/2023 13:13> Balancing operation in progress...
+<12/12/2023 13:13> Container Cat was moved from [1, 2] to [1, 7]
+<12/12/2023 13:13> Balancing Complete!
+<12/12/2023 13:13> User uploaded a manifest
+<12/12/2023 13:13> Balancing operation in progress...
+<12/12/2023 13:14> Container Owl was moved from [1, 9] to [1, 6]
+<12/12/2023 13:14> Container Ram was moved from [1, 4] to [1, 7]
+<12/12/2023 13:14> Balancing Complete!
+<12/12/2023 13:19> User uploaded a manifest
+<12/12/2023 13:19> Balancing operation in progress...
+<12/12/2023 13:19> Container Cat was moved from [1, 2] to [1, 7]
+<12/12/2023 13:19> Balancing Complete!

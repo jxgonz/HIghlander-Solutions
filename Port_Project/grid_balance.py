@@ -391,6 +391,7 @@ class Grid:
             inShip = None
             result = None
 
+        self.buffer_pickup = False
         if pass_state and self.craneEmpty and inShip:#Ship Pickup
             #print("Valid move: Pickup Container (row, col) --> (" + str(temp_row) + ", " + str(temp_col) + ")")
             result = Grid(self.inventory_array, self.buffer_inventory, parent=None, removeRow=temp_row, removeCol=temp_col, craneRow=temp_row, craneCol=temp_col, craneContainer = temp_container)
@@ -400,17 +401,24 @@ class Grid:
             result.inventory_array[temp_row][temp_col] = self.crane
             result.remove_container(result.removeRow, result.removeCol)
             # Update coord array ([intital coordinates, new coordinates])
-            result.coordinate_tracking = [[result.removeRow,result.removeCol], [temp_row,temp_col]]
+            if self.buffer_pickup == True:
+                result.coordinate_tracking = [[result.removeRow,result.removeCol], "Buffer", [temp_row,temp_col], "Ship"]
+            else:
+                result.coordinate_tracking = [[result.removeRow,result.removeCol], "Ship", [temp_row,temp_col], "Ship"]
             result.remove_crane_container()
 
         if pass_state and self.craneEmpty and not inShip:#Buffer Pickup
             #print("Valid move: Pickup Container (row, col) --> (" + str(temp_row) + ", " + str(temp_col) + ")")
             result = Grid(self.inventory_array, self.buffer_inventory, parent=None, removeRow=temp_row, removeCol=temp_col, craneRow=temp_row, craneCol=temp_col, craneContainer = temp_container)
-        
+            self.buffer_pickup = True
         elif pass_state and not self.craneEmpty and not inShip:#Buffer Dropoff
             #print("Valid move: Dropoff Container (row, col) --> (" + str(temp_row) + ", " + str(temp_col) + ")")
             result = Grid(self.inventory_array, self.buffer_inventory, parent=None, removeRow=self.removeRow, removeCol=self.removeCol, craneRow=temp_row, craneCol=temp_col, craneContainer = None)
             result.buffer_inventory[temp_row][temp_col] = self.crane
+            if self.buffer_pickup == True:
+                result.coordinate_tracking = [[result.removeRow,result.removeCol], "Buffer", [temp_row,temp_col], "Buffer"]
+            else:
+                result.coordinate_tracking = [[result.removeRow,result.removeCol], "Ship", [temp_row,temp_col], "Buffer"]
             result.remove_container_buffer(result.removeRow, result.removeCol)
             result.remove_crane_container()
         
