@@ -25,6 +25,7 @@ class Crane:
     self.coordinates = (0,8)   #crane's current coordinataes
     self.empty = True          #checks whether crane is holding container
     self.inBuffer = False      #checks whether crane is in buffer
+    self.onTruck = False
 
 #problem space
 class Problem:
@@ -36,7 +37,8 @@ class Problem:
     self.loadShip = loadShip
     
   def goal_test(self, state):
-    if len(state.loadShip) == 0 and len(state.offloadShip) == 0 and state.ship[state.crane.coordinates[0]][state.crane.coordinates[1]].name == "UNUSED":
+    # print(len(state.loadShip), len(state.offloadShip), state.ship[state.crane.coordinates[0]][state.crane.coordinates[1]].name)
+    if len(state.loadShip) == 0 and len(state.offloadShip) == 0 and state.ship[0][8].name == "UNUSED":
       for i in range(24):
         for container in state.buffer[i]:
           if container.name != "UNUSED":
@@ -128,7 +130,7 @@ class Problem:
       return None
 
   def ship_to_truck(self, state):
-    if state.crane.inBuffer == False:
+    if state.crane.inBuffer == False and state.crane.onTruck == False:
       newCrane = state.crane
       newOffload = state.offloadShip
       newLoad = state.loadShip
@@ -139,6 +141,7 @@ class Problem:
           newCrane.coordinates = (0,8)
           newCrane.empty = False
           newCrane.inBuffer = False
+          newCrane.onTruck = True
           newShip[0][8].name = newLoad[0]
           return Problem(newShip, newBuffer, newCrane, newOffload, newLoad)
         else:
@@ -150,6 +153,7 @@ class Problem:
           newCrane.coordinates = (0,8)
           newCrane.empty = True
           newCrane.inBuffer = False
+          newCrane.onTruck = True
           return Problem(newShip, newBuffer, newCrane, newOffload, newLoad)
         else:
           return None
@@ -199,7 +203,7 @@ class Problem:
       return None
 
   def truck_to_ship(self, state):
-    if state.crane.coordinates == (0,8) and state.crane.inBuffer == False:
+    if state.crane.coordinates == (0,8) and state.crane.inBuffer == False and state.crane.onTruck == True:
       newCrane = state.crane
       newOffload = state.offloadShip
       newLoad = state.loadShip
@@ -210,25 +214,41 @@ class Problem:
         if coordinates != None:
           for container in list(reversed(newShip[coordinates[0]])):
             if container.name != "UNUSED":
+              newShip[0][8].name = "UNUSED"
               newCrane.coordinates = container.coordinates
               newCrane.empty = False
               newCrane.inBuffer = False
+              newCrane.onTruck = False
               return Problem(newShip, newBuffer, newCrane, newOffload, newLoad)
         else:
           return None
       else:
-        for i in range(12):
-          for container in newShip[i]:
-            coordinates = state.container_search(newShip, newOffload)
-            if coordinates != None and i != coordinates[0]:
-              if container.name == "UNUSED" and newShip[0][8].name in newLoad :
+        coordinates = state.container_search(newShip, newOffload)
+        if coordinates == None:
+          for i in range(12):
+            for container in newShip[i]:
+              if container.name == "UNUSED" and newShip[0][8].name in newLoad:
                 container.name = newShip[0][8].name
                 newLoad.remove(newShip[0][8].name)
                 newShip[0][8].name = "UNUSED"
                 newCrane.coordinates = container.coordinates
                 newCrane.empty = True
                 newCrane.inBuffer = False
+                newCrane.onTruck = False
                 return Problem(newShip, newBuffer, newCrane, newOffload, newLoad)
+        else:
+          for i in range(12):
+            for container in newShip[i]:
+              if i != coordinates[0]:
+                if container.name == "UNUSED" and newShip[0][8].name in newLoad:
+                  container.name = newShip[0][8].name
+                  newLoad.remove(newShip[0][8].name)
+                  newShip[0][8].name = "UNUSED"
+                  newCrane.coordinates = container.coordinates
+                  newCrane.empty = True
+                  newCrane.inBuffer = False
+                  newCrane.onTruck = False
+                  return Problem(newShip, newBuffer, newCrane, newOffload, newLoad)
         return None
     else:
       return None
@@ -296,7 +316,7 @@ class Problem:
       return None
     
   def crane_to_ship(self, state):
-    if state.crane.empty and state.crane.inBuffer == False and state.crane.coordinates != (0,8):
+    if state.crane.empty and state.crane.inBuffer == False:
       newCrane = state.crane
       newOffload = state.offloadShip
       newLoad = state.loadShip
@@ -370,20 +390,65 @@ def a_star(problem):
 
     if problem.goal_test(current_node.state):
         path=[]
+        test=[]
         while current_node:
+          test.append(current_node.state.ship)
           step=[]
           if current_node.parent == None:
-            step.append(current_node.state.crane.coordinates)
-            step.append(current_node.state.crane.coordinates)
+            step.append([current_node.state.crane.coordinates[1] + 1, current_node.state.crane.coordinates[0] + 1])
+            step.append('ship')
+            step.append([current_node.state.crane.coordinates[1] + 1, current_node.state.crane.coordinates[0] + 1])
+            step.append('ship')
+            step.append(current_node.h)
+          elif current_node.state.crane.onTruck:
+            step.append([current_node.parent.state.crane.coordinates[1] + 1, current_node.parent.state.crane.coordinates[0] + 1])
+            step.append('ship')
+            step.append([current_node.state.crane.coordinates[1] + 1, current_node.state.crane.coordinates[0] + 1])
+            step.append('truck')
+            step.append(current_node.h)
+          elif current_node.parent.state.crane.onTruck:
+            step.append([current_node.parent.state.crane.coordinates[1] + 1, current_node.parent.state.crane.coordinates[0] + 1])
+            step.append('truck')
+            step.append([current_node.state.crane.coordinates[1] + 1, current_node.state.crane.coordinates[0] + 1])
+            step.append('ship')
+            step.append(current_node.h)
+          elif current_node.state.crane.inBuffer:
+            step.append([current_node.parent.state.crane.coordinates[1] + 1, current_node.parent.state.crane.coordinates[0] + 1])
+            step.append('ship')
+            step.append([current_node.state.crane.coordinates[1] + 1, current_node.state.crane.coordinates[0] + 1])
+            step.append('buffer')
+            step.append(current_node.h)
+          elif current_node.parent.state.crane.inBuffer:
+            step.append([current_node.parent.state.crane.coordinates[1] + 1, current_node.parent.state.crane.coordinates[0] + 1])
+            step.append('buffer')
+            step.append([current_node.state.crane.coordinates[1] + 1, current_node.state.crane.coordinates[0] + 1])
+            step.append('ship')
+            step.append(current_node.h)
+          elif current_node.state.crane.onTruck:
+            step.append([current_node.parent.state.crane.coordinates[1] + 1, current_node.parent.state.crane.coordinates[0] + 1])
+            step.append('ship')
+            step.append([current_node.state.crane.coordinates[1] + 1, current_node.state.crane.coordinates[0] + 1])
+            step.append('truck')
+            step.append(current_node.h)
+          elif current_node.state.crane.onTruck and current_node.parent.state.crane.onTruck:
+            step.append([current_node.parent.state.crane.coordinates[1] + 1, current_node.parent.state.crane.coordinates[0] + 1])
+            step.append('buffer')
+            step.append([current_node.state.crane.coordinates[1] + 1, current_node.state.crane.coordinates[0] + 1])
+            step.append('buffer')
             step.append(current_node.h)
           else:
-            step.append(current_node.parent.state.crane.coordinates)
-            step.append(current_node.state.crane.coordinates)
+            step.append([current_node.parent.state.crane.coordinates[1] + 1, current_node.parent.state.crane.coordinates[0] + 1])
+            step.append('ship')
+            step.append([current_node.state.crane.coordinates[1] + 1, current_node.state.crane.coordinates[0] + 1])
+            step.append('ship')
             step.append(current_node.h)
-          # path.append(current_node)
           current_node = current_node.parent
           path.append(step)
         path.reverse()
+        test.reverse()
+        # for state in test:
+        #   print(np.matrix(state))
+        #   print()
         for node in path:
           print(node)
           print()
@@ -393,6 +458,11 @@ def a_star(problem):
     
     for i in range(7):
       new_state = problem.apply_operator(i, current_node.state)
+      
+      # if new_state is None:
+      #   print(None)
+      # else:
+      #   print(np.matrix(new_state.ship))
       
       if new_state is None:
         continue
@@ -412,12 +482,17 @@ def a_star(problem):
       else:
         frontier.add(new_node)
         
+      # for node in frontier:
+      #   print(np.matrix(node.state.ship))
+      #   print()
+        
+      # print()
+      # print()
+              
   return None, maxLength          
   
-# Method that calls AI algorithm on problem
-# Needs fileName, list of strings of offLoad,
-# list of strings of onLoad containers
-def driver(fileName, offLoad, onLoad):
+def driver():
+  fileName = "ShipCase1.txt"
   data = pd.read_csv(fileName, header=None)
 
   data[0] = data[0].str.strip('[')
@@ -458,13 +533,15 @@ def driver(fileName, offLoad, onLoad):
     ro = None
 
   crane = Crane()
-  problem = Problem(ship, buffer, crane, offLoad, onLoad)
+  problem = Problem(ship, buffer, crane, ["Cat"], ["Frog"])
   
   # uniform_cost(problem)
-  return a_star(problem)
+  a_star(problem)
 
-# def driver():
-#   fileName = "ShipCase1.txt"
+# Method that calls AI algorithm on problem
+# Needs fileName, list of strings of offLoad,
+# list of strings of onLoad containers
+# def driver(fileName, offLoad, onLoad):
 #   data = pd.read_csv(fileName, header=None)
 
 #   data[0] = data[0].str.strip('[')
@@ -505,9 +582,9 @@ def driver(fileName, offLoad, onLoad):
 #     ro = None
 
 #   crane = Crane()
-#   problem = Problem(ship, buffer, crane, ["Cat"], ["Frog"])
+#   problem = Problem(ship, buffer, crane, offLoad, onLoad)
   
 #   # uniform_cost(problem)
-#   a_star(problem)
+#   return a_star(problem)
 
-#driver()
+driver()
