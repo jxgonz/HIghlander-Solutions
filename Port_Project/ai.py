@@ -449,9 +449,9 @@ def a_star(problem):
         # for state in test:
         #   print(np.matrix(state))
         #   print()
-        for node in path:
-          print(node)
-          print()
+        # for node in path:
+        #   print(node)
+        #   print()
         return path
     
     explored.add(current_node)
@@ -587,4 +587,4 @@ def driver():
 #   # uniform_cost(problem)
 #   return a_star(problem)
 
-driver()
+#driver()

@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from login import *
 from ship_grid import *
+from ai import *
 from add_containers import*
 from balanceSteps import *
 from grid_balance import *
@@ -309,6 +310,7 @@ class Ui_MainWindow(QMainWindow):
             self.shipGrid.container_names = self.container_names
             self.shipGrid.weights = self.weights
             self.shipGrid.coords = self.coords
+            self.shipGrid.inventory_array = self.inventory_array
             self.shipGrid.fileName = self.fileName
 
             # Set color of ship grid cells based on NAN, Unused, or Used
@@ -336,8 +338,6 @@ class Ui_MainWindow(QMainWindow):
         self.shipGrid.setWindowModality(QtCore.Qt.ApplicationModal)
         self.shipGrid.tableWidget.clearSelection()
         self.shipGrid.show()
-
-    
 
 if __name__ == "__main__":
     import sys
