@@ -34,7 +34,7 @@ def a_star(start):
             new = current_node.operators(i)
             if new != None:
                 in_lists = False
-                
+                #Added conditional with heuristic to just not include unbalancable states
                 if new and new.calc_heuristic(hn=0) != None: #check that this state is not already in lists
                     new.parent = current_node
                     new.g = current_node.g + 1 # update g(n)
