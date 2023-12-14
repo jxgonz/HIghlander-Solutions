@@ -35,7 +35,7 @@ def a_star(start):
             if new != None:
                 in_lists = False
                 
-                if new: #check that this state is not already in lists
+                if new and new.calc_heuristic(hn=0) != None: #check that this state is not already in lists
                     new.parent = current_node
                     new.g = current_node.g + 1 # update g(n)
                     new.manhattan_distance = new.manhattan(current_node.craneRow, current_node.craneCol) # update manhattan distance
