@@ -560,4 +560,4 @@ def driver(fileName, offLoad, onLoad):
   # uniform_cost(problem)
   return a_star(problem)
 
-driver()
+#driver()

@@ -21,6 +21,7 @@ class Ui_Form(QWidget, object):
         self.parent = object
         self.setObjectName("Remove Containers")
         self.resize(803, 600)
+        self.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.rect().center())
         self.setAutoFillBackground(False)
         self.setupUi(self)
 
@@ -48,6 +49,7 @@ class Ui_Form(QWidget, object):
         self.container_names = []
         self.weights = []
         self.coords = []
+        self.inventory_array = []
 
         # AI Algo needs fileName
         self.fileName = ""
@@ -134,6 +136,7 @@ class Ui_Form(QWidget, object):
             self.addContainerWindow.container_names = self.container_names
             self.addContainerWindow.weights = self.weights
             self.addContainerWindow.coords = self.coords
+            self.addContainerWindow.inventory_array = self.inventory_array
 
             # AI Algo needs strings of containers to remove, not the coordinates
             # Here, i'll convert the list of container coords to their names

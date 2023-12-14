@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from login import *
 from ship_grid import *
+from ai import *
 from add_containers import*
 from balanceSteps import *
 from grid_balance import *
@@ -26,6 +27,7 @@ class Ui_MainWindow(QMainWindow):
         self.setObjectName("MainWindow")
         self.resize(803, 600)
         self.setWindowTitle("MainWindow")
+        self.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.rect().center())
         self.setupUi()
 
 
@@ -274,15 +276,24 @@ class Ui_MainWindow(QMainWindow):
                     self.balanceSteps.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
                     self.balanceSteps.tableWidget.item(row, column).setText(containerNames[i])
                     self.balanceSteps.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
-
+                i=i+1
+        # Set all buffer cells to unused
+        i = 0
+        for row in range (4,0,-1):
+            for column in range (24):
+                # Set unused cells to gray color
+                self.balanceSteps.tableWidget_Buffer.setItem(row,column,QtWidgets.QTableWidgetItem())
+                self.balanceSteps.tableWidget_Buffer.item(row, column).setBackground(QtGui.QColor(169,169,169))
+                # Set unused cells to unclickable
+                self.balanceSteps.tableWidget_Buffer.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
                 i=i+1
 
         # Set intial coords to green
         self.balanceSteps.tableWidget.item(8-self.coord_solution_steps[0][0][0], self.coord_solution_steps[0][0][1]).setBackground(QtGui.QColor(0,255,0))
         # Set intial coords to red
-        self.balanceSteps.tableWidget.item(8-self.coord_solution_steps[0][1][0], self.coord_solution_steps[0][1][1]).setBackground(QtGui.QColor(255,0,0))
+        self.balanceSteps.tableWidget.item(8-self.coord_solution_steps[0][2][0], self.coord_solution_steps[0][2][1]).setBackground(QtGui.QColor(255,0,0))
         # Set intial coords to red
-        self.total_balance_cost = self.total_balance_cost + self.coord_solution_steps[0][2]
+        self.total_balance_cost = self.total_balance_cost + self.coord_solution_steps[0][4]
 
         self.balanceSteps.balanceSteps = self.coord_solution_steps
         self.balanceSteps.total_balance_cost = self.total_balance_cost
@@ -299,6 +310,7 @@ class Ui_MainWindow(QMainWindow):
             self.shipGrid.container_names = self.container_names
             self.shipGrid.weights = self.weights
             self.shipGrid.coords = self.coords
+            self.shipGrid.inventory_array = self.inventory_array
             self.shipGrid.fileName = self.fileName
 
             # Set color of ship grid cells based on NAN, Unused, or Used
@@ -326,8 +338,6 @@ class Ui_MainWindow(QMainWindow):
         self.shipGrid.setWindowModality(QtCore.Qt.ApplicationModal)
         self.shipGrid.tableWidget.clearSelection()
         self.shipGrid.show()
-
-    
 
 if __name__ == "__main__":
     import sys
