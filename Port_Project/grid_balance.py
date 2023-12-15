@@ -66,7 +66,7 @@ class Grid:
 
         # If h(n) > number of containers on the ship, impossible case
         if hn > len(all_containers):
-            print("IMPOSSIBLE CASE: Ship cannot be balanced!")
+            #print("IMPOSSIBLE CASE: Ship cannot be balanced!")
             return None
     
         # Get left and right side of ship weights

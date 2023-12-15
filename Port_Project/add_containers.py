@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from login import *
 from ai import *
 from transferSteps import *
+from container import *
 
 
 class addContainers_Ui_Form(QWidget, object):
@@ -107,26 +108,15 @@ class addContainers_Ui_Form(QWidget, object):
         self.loginWindow.aboutToShow.connect(self.show_login_window)
 
     def noContainersToLoad(self):
-        # #call heuristic algorithm function here and then open window to display stepwise solution
-        # crane = Crane()
-        #   # BUFFER SETUP
-        # buffer = []
-        # for r in range(24):
-        #     ro = []
-        #     for c in range(4):
-        #         ro.append(Container("UNUSED", (r,c)))
-        #     buffer.append(ro)
-        #     ro = None
-        # problem = Problem(self.inventory_array, buffer, crane, self.containers_remove, self.containers_add)
-        # self.coord_solution_steps=a_star(problem)
-        # print(self.coord_solution_steps)
+        #call heuristic algorithm function here and then open window to display stepwise solution
+        self.coord_solution_steps=driver(self.fileName, self.containers_remove, self.containers_add)
+        self.coord_solution_steps.pop(0)
         self.populatetransferSteps()
 
     def add_done(self):
         # If the user enters a container name and clicks "done"
         if self.lineEdit_addContainers.text():
             self.containers_add.append(self.lineEdit_addContainers.text())
-            print(self.containers_add)
             # Show dialog to ask if user would like to add another container
             self.showDialog()
 
@@ -164,19 +154,9 @@ class addContainers_Ui_Form(QWidget, object):
         # If user is done adding containers
         else:
             msgBox.close()
-            # #call heuristic algorithm function here and then open window to display stepwise solution
-            # crane = Crane()
-            #   # BUFFER SETUP
-            # buffer = []
-            # for r in range(24):
-            #     ro = []
-            #     for c in range(4):
-            #         ro.append(Container("UNUSED", (r,c)))
-            #     buffer.append(ro)
-            #     ro = None
-            # problem = Problem(self.inventory_array, buffer, crane, self.containers_remove, self.containers_add)
-            # self.coord_solution_steps=a_star(problem)
-            # print(self.coord_solution_steps)
+            self.coord_solution_steps=driver(self.fileName, self.containers_remove, self.containers_add)
+            self.coord_solution_steps.pop(0)
+            print(self.coord_solution_steps)
             self.populatetransferSteps()
 
     def show_shipGrid_window(self):
@@ -187,10 +167,6 @@ class addContainers_Ui_Form(QWidget, object):
         self.total_transfer_cost = 0
         #if self.transferSteps is None:
         self.transferSteps = Ui_Form_TransferSteps(self)
-
-        # if len(self.coord_solution_steps) == 1:
-        #     self.transferSteps.pushButton_next.hide()
-        #     self.transferSteps.pushButton_removeDone.show()
 
         # Pass all manifest info to next window (transferSteps)
         self.transferSteps.container_names = self.container_names
@@ -237,15 +213,32 @@ class addContainers_Ui_Form(QWidget, object):
         # Set unused cells to unclickable
         self.transferSteps.tableWidget_truck.item(0, 0).setFlags(QtCore.Qt.ItemIsEnabled)
 
-        # # Set intial coords to green
-        # self.transferSteps.tableWidget.item(8-self.coord_solution_steps[0][0][0], self.coord_solution_steps[0][0][1]).setBackground(QtGui.QColor(0,255,0))
-        # # Set intial coords to red
-        # self.transferSteps.tableWidget.item(8-self.coord_solution_steps[0][2][0], self.coord_solution_steps[0][2][1]).setBackground(QtGui.QColor(255,0,0))
-        # # Set intial coords to red
-        # self.total_transfer_cost = self.total_transfer_cost + self.coord_solution_steps[0][4]
+        if self.coord_solution_steps[0][1]=="truck":
+            self.transferSteps.tableWidget_truck.item(0, 0).setText(self.containers_add[0])
+            # Set intial coords to green
+            self.transferSteps.tableWidget_truck.item(0, 0).setBackground(QtGui.QColor(0,255,0))
+            # Set intial coords to red
+            self.transferSteps.tableWidget.item(9-self.coord_solution_steps[0][2][0], self.coord_solution_steps[0][2][1]-1).setBackground(QtGui.QColor(255,0,0))
+            # Set intial coords to red
+            self.total_transfer_cost = self.total_transfer_cost + self.coord_solution_steps[0][4]
+        elif self.coord_solution_steps[0][3]=="truck":
+            # Set intial coords to green
+            self.transferSteps.tableWidget.item(9-self.coord_solution_steps[0][0][0], self.coord_solution_steps[0][0][1]-1).setBackground(QtGui.QColor(0,255,0))
+            # Set intial coords to red
+            self.transferSteps.tableWidget_truck.item(0, 0).setBackground(QtGui.QColor(255,0,0))
+            # Set intial coords to red
+            self.total_transfer_cost = self.total_transfer_cost + self.coord_solution_steps[0][4]
+        else:
+            # Set intial coords to green
+            self.transferSteps.tableWidget.item(9-self.coord_solution_steps[0][0][0], self.coord_solution_steps[0][0][1]-1).setBackground(QtGui.QColor(0,255,0))
+            # Set intial coords to red
+            self.transferSteps.tableWidget.item(9-self.coord_solution_steps[0][2][0], self.coord_solution_steps[0][2][1]-1).setBackground(QtGui.QColor(255,0,0))
+            # Set intial coords to red
+            self.total_transfer_cost = self.total_transfer_cost + self.coord_solution_steps[0][4]
 
-        # self.transferSteps.transferSteps = self.coord_solution_steps
-        # self.transferSteps.total_transfer_cost = self.total_transfer_cost
+        self.transferSteps.transferSteps = self.coord_solution_steps
+        self.transferSteps.containers_add = self.containers_add
+        self.transferSteps.total_transfer_cost = self.total_transfer_cost
 
         self.transferSteps.setWindowModality(QtCore.Qt.ApplicationModal)
         self.transferSteps.tableWidget.clearSelection()

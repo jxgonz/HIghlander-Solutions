@@ -34,22 +34,6 @@ class Container:
         else:
             self.success = False
 
-    # In relation to the project, an example use would be:
-    # 
-    # If a container needs to be loaded, it's coordinates would be the pink box?
-    # containerA = Container("walMart", [1,10], True, False)
-    # containerB = Container("target", [1,2], False, True)
-
-    # If a container is already on the ship and doesn't need to be loaded,
-    # both parameters are False to signifiy no transfer needed.
-    # containerC = Container("cat", [1,3], False, False)
-    # 
-    # After operations, we can check if a container is successfully placed
-    # containersList = [containerA, containerB, containerC]
-    # if all containersList.success
-    #   problem.Solved()
-        
-
 
 
     
