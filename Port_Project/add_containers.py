@@ -5,6 +5,7 @@ from ai import *
 from transferSteps import *
 from container import *
 from ship_grid import *
+from inputWeight import *
 
 
 class addContainers_Ui_Form(QWidget, object):
@@ -21,7 +22,7 @@ class addContainers_Ui_Form(QWidget, object):
     def setupUi(self, Form):
  
         self.LoginWindow = None
-
+        self.inputWeight = None
         #Adding label for Ship Grid
         self.label_loadContainers = QtWidgets.QLabel(self)
         self.label_loadContainers.setGeometry(QtCore.QRect(0, 80, 801, 41))
@@ -223,6 +224,15 @@ class addContainers_Ui_Form(QWidget, object):
             self.transferSteps.tableWidget.item(9-self.coord_solution_steps[0][2][0], self.coord_solution_steps[0][2][1]-1).setBackground(QtGui.QColor(255,0,0))
             # Set intial coords to red
             self.total_transfer_cost = self.total_transfer_cost + self.coord_solution_steps[0][4]
+            if self.inputWeight == None:
+                self.inputWeight = Ui_Dialog_InputWeight(self)
+                # Set login window to application modal so that it must be closed before main window can be used
+                # This solves the issue of when you open the login window a second time it will be behind the main window
+                self.inputWeight.setWindowModality(QtCore.Qt.ApplicationModal)
+                resp = self.inputWeight.exec_()
+                # retrieve text from line edit in dialog and return it
+                self.weight = self.inputWeight.spin.value()
+                
         elif self.coord_solution_steps[0][3]=="truck":
             # Set intial coords to green
             self.transferSteps.tableWidget.item(9-self.coord_solution_steps[0][0][0], self.coord_solution_steps[0][0][1]-1).setBackground(QtGui.QColor(0,255,0))
@@ -239,6 +249,7 @@ class addContainers_Ui_Form(QWidget, object):
             self.total_transfer_cost = self.total_transfer_cost + self.coord_solution_steps[0][4]
 
         self.transferSteps.transferSteps = self.coord_solution_steps
+        self.transferSteps.weight = self.weight
         self.transferSteps.containers_add = self.containers_add
         self.transferSteps.total_transfer_cost = self.total_transfer_cost
 
