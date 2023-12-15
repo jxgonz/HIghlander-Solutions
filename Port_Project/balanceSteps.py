@@ -286,7 +286,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
         msgBox.setWindowTitle("Balancing Complete")
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec()
-        #self.printNewManifest()
+        self.printNewManifest()
         self.close()
 
     def printNewManifest(self):
