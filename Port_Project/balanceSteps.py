@@ -294,7 +294,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
         downloads_path = str(Path.home() / "Downloads")
         f = open(downloads_path+'/manifest.txt','w') #write
         for i in range(0,len(self.container_names)):
-            f.write(f"["+str(self.coords[i])+"], {"+str(self.weights[i])+"}, "+str(self.container_names[i])+"\n")
+            f.write(f"["+str(self.coords[i])+"], {"+str(self.weights[i]).zfill(5)+"}, "+str(self.container_names[i])+"\n")
         f.close()
 
     def show_login_window(self):
