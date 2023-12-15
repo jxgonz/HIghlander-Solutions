@@ -295,37 +295,36 @@ class Ui_MainWindow(QMainWindow):
 
     def populateShipGrid(self):
         containerNames = self.container_names
-        if self.shipGrid is None:
-            self.shipGrid = Ui_Form(self)
-            # Pass all manifest info to next window (ShipGrid)
-            self.shipGrid.container_names = self.container_names
-            self.shipGrid.weights = self.weights
-            self.shipGrid.coords = self.coords
-            self.shipGrid.inventory_array = self.inventory_array
-            self.shipGrid.fileName = self.fileName
+        self.shipGrid = Ui_Form(self)
+        # Pass all manifest info to next window (ShipGrid)
+        self.shipGrid.container_names = self.container_names
+        self.shipGrid.weights = self.weights
+        self.shipGrid.coords = self.coords
+        self.shipGrid.inventory_array = self.inventory_array
+        self.shipGrid.fileName = self.fileName
 
-            # Set color of ship grid cells based on NAN, Unused, or Used
-            i = 0
-            for row in reversed(range (8)):
-                for column in range (12):
-                    if containerNames[i] == "NAN":
-                        # Set nan cells to black color
-                        self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
-                        self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,0))
-                        # Set nan cells to unclickable
-                        self.shipGrid.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
-                    elif containerNames[i] == "UNUSED":
-                        # Set unused cells to gray color
-                        self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
-                        self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(169,169,169))
-                        # Set unused cells to unclickable
-                        self.shipGrid.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
-                    else:
-                        # Set used cells to blue color
-                        self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
-                        self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
-                        self.shipGrid.tableWidget.item(row, column).setText(containerNames[i])
-                    i=i+1
+        # Set color of ship grid cells based on NAN, Unused, or Used
+        i = 0
+        for row in reversed(range (8)):
+            for column in range (12):
+                if containerNames[i] == "NAN":
+                    # Set nan cells to black color
+                    self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                    self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,0))
+                    # Set nan cells to unclickable
+                    self.shipGrid.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
+                elif containerNames[i] == "UNUSED":
+                    # Set unused cells to gray color
+                    self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                    self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(169,169,169))
+                    # Set unused cells to unclickable
+                    self.shipGrid.tableWidget.item(row, column).setFlags(QtCore.Qt.ItemIsEnabled)
+                else:
+                    # Set used cells to blue color
+                    self.shipGrid.tableWidget.setItem(row,column,QtWidgets.QTableWidgetItem())
+                    self.shipGrid.tableWidget.item(row, column).setBackground(QtGui.QColor(0,0,255))
+                    self.shipGrid.tableWidget.item(row, column).setText(containerNames[i])
+                i=i+1
         self.shipGrid.setWindowModality(QtCore.Qt.ApplicationModal)
         self.shipGrid.tableWidget.clearSelection()
         self.shipGrid.show()

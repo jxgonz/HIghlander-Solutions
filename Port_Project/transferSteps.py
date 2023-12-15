@@ -262,23 +262,23 @@ class Ui_Form_TransferSteps(QWidget, object):
             self.tableWidget.item(9-self.transferSteps[self.transferCounter][2][0], self.transferSteps[self.transferCounter][2][1]-1).setText(container_name)
             self.tableWidget.item(9-self.transferSteps[self.transferCounter][0][0], self.transferSteps[self.transferCounter][0][1]-1).setText("")
 
-        # # Update container names and weights arrays with new container location
-        # i = 0
-        # for row in range (8,0,-1):
-        #     for col in range (12):
-        #         if row == (9-self.transferSteps[self.transferCounter][0][0]) and col == (self.transferSteps[self.transferCounter][0][1]):
-        #             self.container_names[i] = "UNUSED"
-        #             self.container_weight = self.weights[i]
-        #             self.weights[i] = 0
-        #         i=i+1
+        # Update container names and weights arrays with new container location
+        i = 0
+        for row in range (8,0,-1):
+            for col in range (12):
+                if self.transferSteps[self.transferCounter][1] != "truck" and row == (9-self.transferSteps[self.transferCounter][0][0]) and col == (self.transferSteps[self.transferCounter][0][1]-1):
+                    self.container_names[i] = "UNUSED"
+                    self.container_weight = self.weights[i]
+                    self.weights[i] = 0
+                i=i+1
         
-        # i = 0
-        # for row in range (8,0,-1):
-        #     for col in range (12):
-        #         if row == (9-self.transferSteps[self.transferCounter][2][0]) and col == (self.transferSteps[self.transferCounter][2][1]):
-        #                     self.container_names[i] = container_name
-        #                     self.weights[i] = self.container_weight
-        #         i=i+1
+        i = 0
+        for row in range (8,0,-1):
+            for col in range (12):
+                if self.transferSteps[self.transferCounter][3] != "truck" and row == (9-self.transferSteps[self.transferCounter][2][0]) and col == (self.transferSteps[self.transferCounter][2][1]-1):
+                            self.container_names[i] = container_name
+                            self.weights[i] = self.container_weight
+                i=i+1
 
         # Writes to log file
         f = open('log.txt','a') #append
@@ -319,73 +319,55 @@ class Ui_Form_TransferSteps(QWidget, object):
                 self.total_transfer_cost = self.total_transfer_cost + self.transferSteps[self.transferCounter][4]
 
     def remove_done(self):
-        if len(self.transferSteps) == 1:
-            # If old coords are from the truck, set truck widget to grey
-            if self.transferSteps[self.transferCounter][1] == "truck":
-                self.tableWidget_truck.item(0, 0).setBackground(QtGui.QColor(169,169,169))
-                container_name = self.tableWidget_truck.item(0, 0).text()
-            else:
-                # Set old coords to grey
-                self.tableWidget.item(9-self.transferSteps[self.transferCounter][0][0], self.transferSteps[self.transferCounter][0][1]-1).setBackground(QtGui.QColor(169,169,169))
-                container_name = self.tableWidget.item(9-self.transferSteps[self.transferCounter][0][0], self.transferSteps[self.transferCounter][0][1]-1).text()
+        # if len(self.transferSteps) == 1:
+        #     # If old coords are from the truck, set truck widget to grey
+        #     if self.transferSteps[self.transferCounter][1] == "truck":
+        #         self.tableWidget_truck.item(0, 0).setBackground(QtGui.QColor(169,169,169))
+        #         container_name = self.tableWidget_truck.item(0, 0).text()
+        #     else:
+        #         # Set old coords to grey
+        #         self.tableWidget.item(9-self.transferSteps[self.transferCounter][0][0], self.transferSteps[self.transferCounter][0][1]-1).setBackground(QtGui.QColor(169,169,169))
+        #         container_name = self.tableWidget.item(9-self.transferSteps[self.transferCounter][0][0], self.transferSteps[self.transferCounter][0][1]-1).text()
             
-            # If new coords are to the truck, set truck widget to blue
-            if self.transferSteps[self.transferCounter][3] == "truck":
-                self.tableWidget_truck.item(0, 0).setBackground(QtGui.QColor(0,0,255))
-                self.tableWidget_truck.item(0, 0).setText(container_name)
-                self.tableWidget_truck.item(0, 0).setText("")
-            else:
-                # Set new container coords to blue
-                self.tableWidget.item(9-self.transferSteps[self.transferCounter][2][0], self.transferSteps[self.transferCounter][2][1]-1).setBackground(QtGui.QColor(0,0,255))
-                self.tableWidget.item(9-self.transferSteps[self.transferCounter][2][0], self.transferSteps[self.transferCounter][2][1]-1).setText(container_name)
-                self.tableWidget.item(9-self.transferSteps[self.transferCounter][0][0], self.transferSteps[self.transferCounter][0][1]-1).setText("")
+        #     # If new coords are to the truck, set truck widget to blue
+        #     if self.transferSteps[self.transferCounter][3] == "truck":
+        #         self.tableWidget_truck.item(0, 0).setBackground(QtGui.QColor(0,0,255))
+        #         self.tableWidget_truck.item(0, 0).setText(container_name)
+        #         self.tableWidget_truck.item(0, 0).setText("")
+        #     else:
+        #         # Set new container coords to blue
+        #         self.tableWidget.item(9-self.transferSteps[self.transferCounter][2][0], self.transferSteps[self.transferCounter][2][1]-1).setBackground(QtGui.QColor(0,0,255))
+        #         self.tableWidget.item(9-self.transferSteps[self.transferCounter][2][0], self.transferSteps[self.transferCounter][2][1]-1).setText(container_name)
+        #         self.tableWidget.item(9-self.transferSteps[self.transferCounter][0][0], self.transferSteps[self.transferCounter][0][1]-1).setText("")
 
-            # # Update container names and weights arrays with new container location
-            # i = 0
-            # for row in range (8,0,-1):
-            #     for col in range (12):
-            #         if row == (9-self.transferSteps[self.transferCounter][0][0]) and col == (self.transferSteps[self.transferCounter][0][1]-1):
-            #             self.container_names[i] = "UNUSED"
-            #             self.container_weight = self.weights[i]
-            #             self.weights[i] = 0
-            #         i=i+1
+        #     # Writes to log file
+        #     f = open('log.txt','a') #append
+        #     timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
+        #     if self.transferSteps[self.transferCounter][1] == "truck":
+        #         f.write("<" + timeStamp + "> Container "+container_name+" was moved from [truck] to ["+str(self.transferSteps[self.transferCounter][2][0]+1)+", "+str(self.transferSteps[self.transferCounter][2][1]+1)+"]\n")
+        #     if self.transferSteps[self.transferCounter][3] == "truck":
+        #         f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(self.transferSteps[self.transferCounter][0][0]+1)+", "+str(self.transferSteps[self.transferCounter][0][1]+1)+"] to [truck]\n")
+        #     else:
+        #         f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(self.transferSteps[self.transferCounter][0][0]+1)+", "+str(self.transferSteps[self.transferCounter][0][1]+1)+"] to ["+str(self.transferSteps[self.transferCounter][2][0]+1)+", "+str(self.transferSteps[self.transferCounter][2][1]+1)+"]\n")
+        #     f.close()
+
+        #     # Update container names and weights arrays with new container location
+        #     i = 0
+        #     for row in range (8,0,-1):
+        #         for col in range (12):
+        #             if self.transferSteps[self.transferCounter][1] != "truck" and row == (9-self.transferSteps[self.transferCounter][0][0]) and col == (self.transferSteps[self.transferCounter][0][1]-1):
+        #                 self.container_names[i] = "UNUSED"
+        #                 self.container_weight = self.weights[i]
+        #                 self.weights[i] = 0
+        #             i=i+1
             
-            # i = 0
-            # for row in range (8,0,-1):
-            #     for col in range (12):
-            #         if row == (9-self.transferSteps[self.transferCounter][2][0]) and col == (self.transferSteps[self.transferCounter][2][1]-1):
-            #                     self.container_names[i] = container_name
-            #                     self.weights[i] = self.container_weight
-            #         i=i+1
-
-            # Writes to log file
-            f = open('log.txt','a') #append
-            timeStamp = datetime.now().strftime("%m/%d/%Y %H:%M")
-            if self.transferSteps[self.transferCounter][1] == "truck":
-                f.write("<" + timeStamp + "> Container "+container_name+" was moved from [truck] to ["+str(self.transferSteps[self.transferCounter][2][0]+1)+", "+str(self.transferSteps[self.transferCounter][2][1]+1)+"]\n")
-            if self.transferSteps[self.transferCounter][3] == "truck":
-                f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(self.transferSteps[self.transferCounter][0][0]+1)+", "+str(self.transferSteps[self.transferCounter][0][1]+1)+"] to [truck]\n")
-            else:
-                f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(self.transferSteps[self.transferCounter][0][0]+1)+", "+str(self.transferSteps[self.transferCounter][0][1]+1)+"] to ["+str(self.transferSteps[self.transferCounter][2][0]+1)+", "+str(self.transferSteps[self.transferCounter][2][1]+1)+"]\n")
-            f.close()
-
-            # Update container names and weights arrays with new container location
-            i = 0
-            for row in range (8,0,-1):
-                for col in range (12):
-                    if row == (9-self.transferSteps[self.transferCounter][0][0]) and col == (self.transferSteps[self.transferCounter][0][1]-1):
-                        self.container_names[i] = "UNUSED"
-                        self.container_weight = self.weights[i]
-                        self.weights[i] = 0
-                    i=i+1
-            
-            i = 0
-            for row in range (8,0,-1):
-                for col in range (12):
-                    if row == (9-self.transferSteps[self.transferCounter][2][0]) and col == (self.transferSteps[self.transferCounter][2][1]-1):
-                                self.container_names[i] = container_name
-                                self.weights[i] = self.container_weight
-                    i=i+1
+        #     i = 0
+        #     for row in range (8,0,-1):
+        #         for col in range (12):
+        #             if self.transferSteps[self.transferCounter][3] != "truck" and row == (9-self.transferSteps[self.transferCounter][2][0]) and col == (self.transferSteps[self.transferCounter][2][1]-1):
+        #                         self.container_names[i] = container_name
+        #                         self.weights[i] = self.container_weight
+        #             i=i+1
 
         # If add container window is not open, open it
         msgBox = QMessageBox()
@@ -409,6 +391,7 @@ class Ui_Form_TransferSteps(QWidget, object):
         downloads_path = str(Path.home() / "Downloads")
         f = open(downloads_path+'/manifest.txt','w') #write
         for i in range(0,len(self.container_names)):
+            print(f"["+str(self.coords[i])+"], {"+str(self.weights[i])+"}, "+str(self.container_names[i])+"\n")
             f.write(f"["+str(self.coords[i])+"], {"+str(self.weights[i])+"}, "+str(self.container_names[i])+"\n")
         f.close()
 
