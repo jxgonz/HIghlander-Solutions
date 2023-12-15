@@ -4,6 +4,7 @@ from login import *
 from ai import *
 from transferSteps import *
 from container import *
+from ship_grid import *
 
 
 class addContainers_Ui_Form(QWidget, object):
@@ -111,6 +112,7 @@ class addContainers_Ui_Form(QWidget, object):
         #call heuristic algorithm function here and then open window to display stepwise solution
         self.coord_solution_steps=driver(self.fileName, self.containers_remove, self.containers_add)
         self.coord_solution_steps.pop(0)
+        print(self.coord_solution_steps)
         self.populatetransferSteps()
 
     def add_done(self):
@@ -243,3 +245,4 @@ class addContainers_Ui_Form(QWidget, object):
         self.transferSteps.setWindowModality(QtCore.Qt.ApplicationModal)
         self.transferSteps.tableWidget.clearSelection()
         self.transferSteps.show()
+        self.hide()

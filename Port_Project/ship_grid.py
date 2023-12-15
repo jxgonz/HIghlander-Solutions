@@ -137,6 +137,7 @@ class Ui_Form(QWidget, object):
         # Set login window to application modal so that it must be closed before main window can be used
         # This solves the issue of when you open the login window a second time it will be behind the main window
         self.addContainerWindow.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.close()
         self.addContainerWindow.show()
 
     def show_login_window(self):
