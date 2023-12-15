@@ -55,13 +55,13 @@ def a_star(start):
                     else: #replace if in frontier and higher cost
                         for i,node in enumerate(frontier):
                             if (node.inventory_array == new.inventory_array and node.buffer_inventory == new.buffer_inventory and node.crane == new.crane) and (new.cost <= node.cost):
-                                print("Node information:")
-                                print(node.h)
-                                node.printGridWeights()
-                                print()
-                                print("New information:")
-                                print(new.h)
-                                new.printGridWeights()
+                                # print("Node information:")
+                                # print(node.h)
+                                # node.printGridWeights()
+                                # print()
+                                # print("New information:")
+                                # print(new.h)
+                                # new.printGridWeights()
 
                                 if new.cost < node.cost:
                                     frontier[i] = new

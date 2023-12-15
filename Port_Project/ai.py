@@ -347,9 +347,9 @@ def uniform_cost(problem):
         path.append(current_node)
         current_node = current_node.parent
       path.reverse()
-      for node in path:
-        print(np.matrix(node.state.ship))
-        print()
+      # for node in path:
+      #   print(np.matrix(node.state.ship))
+      #   print()
       return path, maxLength
   
     explored.add(current_node)
@@ -391,53 +391,54 @@ def a_star(problem):
             step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
             step.append('ship')
             step.append(current_node.h)
-          elif current_node.state.crane.onTruck:
+            path.append(step)
+          elif current_node.state.crane.onTruck and current_node.parent.state.crane.empty == False:
             step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
             step.append('ship')
             step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
-            step.append('truck')
+            step.append("truck")
             step.append(current_node.h)
-          elif current_node.parent.state.crane.onTruck:
+            path.append(step)
+          elif current_node.parent.state.crane.onTruck and current_node.parent.state.crane.empty == False:
             step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
-            step.append('truck')
+            step.append("truck")
             step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
             step.append('ship')
             step.append(current_node.h)
-          elif current_node.state.crane.inBuffer and current_node.parent.state.crane.inBuffer:
+            path.append(step)
+          elif current_node.state.crane.inBuffer and current_node.parent.state.crane.inBuffer and current_node.parent.state.crane.empty == False:
             step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
             step.append('buffer')
             step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
             step.append('buffer')
             step.append(current_node.h)
-          elif current_node.state.crane.inBuffer:
+            path.append(step)
+          elif current_node.state.crane.inBuffer and current_node.parent.state.crane.empty == False:
             step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
             step.append('ship')
             step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
             step.append('buffer')
             step.append(current_node.h)
-          elif current_node.parent.state.crane.inBuffer:
+            path.append(step)
+          elif current_node.parent.state.crane.inBuffer and current_node.parent.state.crane.empty == False:
             step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
             step.append('buffer')
             step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
             step.append('ship')
             step.append(current_node.h)
+            path.append(step)
           else:
-            step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
-            step.append('ship')
-            step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
-            step.append('ship')
-            step.append(current_node.h)
+            if current_node.parent.state.crane.empty == False:
+              step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
+              step.append('ship')
+              step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
+              step.append('ship')
+              step.append(current_node.h)
+              path.append(step)
           current_node = current_node.parent
-          path.append(step)
+          
         path.reverse()
         test.reverse()
-        for i in range(len(test)):
-          for j in range(8,-1,-1):
-            print(test[i][j])
-          print()
-          print(path[i])
-          print()
-          print()
         return path
     
     explored.add(current_node)
@@ -464,54 +465,6 @@ def a_star(problem):
         frontier.add(new_node)
               
   return None, maxLength          
-  
-# def driver():
-#   fileName = "ShipCase2.txt"
-#   data = pd.read_csv(fileName, header=None)
-
-#   data[0] = data[0].str.strip('[')
-#   data[1] = data[1].str.strip(']')
-#   data[3] = data[3].str.strip()
-
-#   data[0] = pd.to_numeric(data[0])
-#   data[1] = pd.to_numeric(data[1])
-
-#   # SHIP SETUP
-#   ship = []
-#   for r in range(9):
-#     row = []
-#     for c in range(12):
-#       row.append(Container("BLANK",()))
-#     ship.append(row)
-#     row = None
-
-#   k = 0
-#   for i in range(0,8):
-#     for j in range(0,12):
-#       containerName = data.at[k,3]
-#       ship[i][j] = Container(containerName, (i,j))
-#       k = k + 1
-  
-#   for i in range(0,12):
-#     ship[8][i] = Container("UNUSED", (i,8))
-
-#   # BUFFER SETUP
-#   buffer = []
-#   for r in range(4):
-#     ro = []
-#     for c in range(24):
-#       ro.append(Container("UNUSED", (r,c)))
-#     buffer.append(ro)
-#     ro = None
-
-#   crane = Crane()
-#   problem = Problem(ship, buffer, crane, ["Cat"], ["Frog"])
-  
-#   # uniform_cost(problem)
-#   a_star(problem)
-
-
-
 
 # Method that calls AI algorithm on problem
 # Needs fileName, list of strings of offLoad,
@@ -557,7 +510,4 @@ def driver(fileName, offLoad, onLoad):
   crane = Crane()
   problem = Problem(ship, buffer, crane, offLoad, onLoad)
   
-  # uniform_cost(problem)
   return a_star(problem)
-
-#driver()

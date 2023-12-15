@@ -8,6 +8,8 @@ class Container:
         self.x = x
         # Y coord
         self.y = y
+
+        self.coordinates = (x,y)
         # Weight
         self.weight = weight
 
