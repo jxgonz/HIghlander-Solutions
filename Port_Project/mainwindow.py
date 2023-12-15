@@ -30,7 +30,7 @@ class Ui_MainWindow(QMainWindow):
         self.setWindowTitle("MainWindow")
         self.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.rect().center())
         self.setupUi()
-        self.load_settings()
+        # self.load_settings()
         
 
 
@@ -109,6 +109,7 @@ class Ui_MainWindow(QMainWindow):
         #Connecting buttons to functions
         self.pushButton_uploadManifest.clicked.connect(self.upload_manifest)
         self.menuLogin.aboutToShow.connect(self.show_login_window)
+        # self.save_state
 
     def show_login_window(self):
         # If login window is not open, open it
@@ -231,7 +232,9 @@ class Ui_MainWindow(QMainWindow):
                     self.solution_len += 1
 
                 # Open window and display steps to balance ship
+                print("BEFORE")
                 self.populateBalanceSteps()
+                print("AFTER")
 
             else:
                 msgBox = QMessageBox()
@@ -304,7 +307,6 @@ class Ui_MainWindow(QMainWindow):
         self.balanceSteps.setWindowModality(QtCore.Qt.ApplicationModal)
         self.balanceSteps.tableWidget.clearSelection()
         self.balanceSteps.show()
-        self.save_state
 
     def populateShipGrid(self):
         containerNames = self.container_names
@@ -342,8 +344,10 @@ class Ui_MainWindow(QMainWindow):
         self.shipGrid.setWindowModality(QtCore.Qt.ApplicationModal)
         self.shipGrid.tableWidget.clearSelection()
         self.shipGrid.show()
+        self.save_state
     
     def closeEvent(self, event):
+        print("CLOSE!")
         self.save_state()
         event.accept()
         

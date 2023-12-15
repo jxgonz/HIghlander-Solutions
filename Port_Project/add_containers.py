@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from login import *
 from ai import *
 from transferSteps import *
+from PyQt5.QtCore import QSettings, QByteArray
 
 
 class addContainers_Ui_Form(QWidget, object):
@@ -15,6 +16,7 @@ class addContainers_Ui_Form(QWidget, object):
         self.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.rect().center())
         self.setAutoFillBackground(False)
         self.setupUi(self)
+        # self.load_settings()
 
     def setupUi(self, Form):
  
@@ -177,7 +179,10 @@ class addContainers_Ui_Form(QWidget, object):
             # problem = Problem(self.inventory_array, buffer, crane, self.containers_remove, self.containers_add)
             # self.coord_solution_steps=a_star(problem)
             # print(self.coord_solution_steps)
+            # print("BEFORE!")
+            self.load_settings()
             self.populatetransferSteps()
+            # print("AFTER")
 
     def show_shipGrid_window(self):
         self.close()
@@ -250,3 +255,25 @@ class addContainers_Ui_Form(QWidget, object):
         self.transferSteps.setWindowModality(QtCore.Qt.ApplicationModal)
         self.transferSteps.tableWidget.clearSelection()
         self.transferSteps.show()
+        self.save_state()
+        print("STATE SAVED")
+        
+    # def closeEvent(self, event):
+    #     print("CLOSE!")
+    #     self.save_state()
+    #     event.accept()
+        
+    def save_state(self):
+        settings = QSettings('Transfer Window', 'Save State')
+        # settings.setValue('window_state', self.saveState())
+        settings.setValue('geometry', self.saveGeometry())
+        
+    def load_settings(self):
+        settings = QSettings('Main Window', 'Save State')
+        # window_state = settings.value('window_state', QByteArray())
+        geometry = settings.value('geometry', QByteArray())
+        
+        # if window_state:
+        #     self.restoreState(window_state)
+        if geometry:
+            self.restoreGeometry(geometry)
