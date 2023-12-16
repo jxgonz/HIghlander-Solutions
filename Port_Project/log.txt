@@ -500,3 +500,55 @@
 <12/15/2023 23:09> Transfer operation in progress...
 <12/15/2023 23:09> Container Dog was moved from [2, 4] to [truck]
 <12/15/2023 23:09> Transfer Complete!
+<12/15/2023 23:23> User uploaded a manifest
+<12/15/2023 23:23> Transfer operation in progress...
+<12/15/2023 23:23> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 23:23> Transfer Complete!
+<12/15/2023 23:23> User uploaded a manifest
+<12/15/2023 23:23> Transfer operation in progress...
+<12/15/2023 23:24> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 23:24> Transfer Complete!
+<12/15/2023 23:25> User uploaded a manifest
+<12/15/2023 23:25> Transfer operation in progress...
+<12/15/2023 23:26> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 23:26> Transfer Complete!
+<12/15/2023 23:26> User uploaded a manifest
+<12/15/2023 23:26> Transfer operation in progress...
+<12/15/2023 23:27> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 23:27> Transfer Complete!
+<12/15/2023 23:27> User uploaded a manifest
+<12/15/2023 23:27> Transfer operation in progress...
+<12/15/2023 23:27> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 23:27> Transfer Complete!
+<12/15/2023 23:29> User uploaded a manifest
+<12/15/2023 23:29> Transfer operation in progress...
+<12/15/2023 23:29> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 23:29> Transfer Complete!
+<12/15/2023 23:30> User uploaded a manifest
+<12/15/2023 23:30> Transfer operation in progress...
+<12/15/2023 23:34> User uploaded a manifest
+<12/15/2023 23:34> Transfer operation in progress...
+<12/15/2023 23:34> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 23:34> Transfer Complete!
+<12/15/2023 23:36> User uploaded a manifest
+<12/15/2023 23:36> Transfer operation in progress...
+<12/15/2023 23:36> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 23:36> Transfer Complete!
+<12/15/2023 23:38> User uploaded a manifest
+<12/15/2023 23:38> Transfer operation in progress...
+<12/15/2023 23:38> User entered weight for loading container as: [234]
+<12/15/2023 23:38> Container asd was moved from [truck] to [3, 2]
+<12/15/2023 23:38> Container asd was moved from [10, 2] to [3, 2]
+<12/15/2023 23:38> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 23:38> Transfer Complete!
+<12/15/2023 23:40> User uploaded a manifest
+<12/15/2023 23:40> Transfer operation in progress...
+<12/15/2023 23:40> User entered weight for loading container as: [234]
+<12/15/2023 23:40> Container asd was moved from [truck] to [3, 2]
+<12/15/2023 23:40> Container asd was moved from [10, 2] to [3, 2]
+<12/15/2023 23:40> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 23:40> Transfer Complete!
+<12/15/2023 23:40> User uploaded a manifest
+<12/15/2023 23:40> Balancing operation in progress...
+<12/15/2023 23:40> Container Cat was moved from [1, 2] to [1, 7]
+<12/15/2023 23:40> Balancing Complete!

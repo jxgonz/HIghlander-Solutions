@@ -22,13 +22,13 @@ class Ui_MainWindow(QMainWindow):
         self.resize(803, 600)
         self.setWindowTitle("MainWindow")
         self.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.rect().center())
-        if self.load_state() == False:
-            self.setupUi()
+        self.setupUi()
+        # if self.load_state() == False:
+        #     self.setupUi()
         
 
     def load_state(self):
         working_dir = str(pathlib.Path().resolve())
-        print(working_dir + "\save_state.txt")
         if os.stat(working_dir + "\save_state.txt").st_size == 0:
             return False
         else:

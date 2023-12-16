@@ -112,6 +112,7 @@ class addContainers_Ui_Form(QWidget, object):
 
     def noContainersToLoad(self):
         #call heuristic algorithm function here and then open window to display stepwise solution
+        print(self.containers_add)
         self.coord_solution_steps=driver(self.fileName, self.containers_remove, self.containers_add)
         if self.coord_solution_steps is None:
                 msgBox = QMessageBox()
@@ -121,9 +122,8 @@ class addContainers_Ui_Form(QWidget, object):
                 msgBox.setStandardButtons(QMessageBox.Ok)
                 msgBox.exec()
                 self.hide()
-        else:
-            self.coord_solution_steps.pop(0)
-            self.populatetransferSteps()
+        self.coord_solution_steps.pop(0)
+        self.populatetransferSteps()
 
     def add_done(self):
         # If the user enters a container name and clicks "done"
@@ -167,7 +167,6 @@ class addContainers_Ui_Form(QWidget, object):
         else:
             msgBox.close()
             self.coord_solution_steps=driver(self.fileName, self.containers_remove, self.containers_add)
-            self.coord_solution_steps.pop(0)
             # print(self.coord_solution_steps)
             if self.coord_solution_steps is None:
                 msgBox = QMessageBox()
@@ -177,9 +176,9 @@ class addContainers_Ui_Form(QWidget, object):
                 msgBox.setStandardButtons(QMessageBox.Ok)
                 msgBox.exec()
                 self.hide()
-            else:
-                self.coord_solution_steps.pop(0)
-                self.populatetransferSteps()
+            self.coord_solution_steps.pop(0)
+            print(self.coord_solution_steps)
+            self.populatetransferSteps()
 
     def show_shipGrid_window(self):
         self.close()
