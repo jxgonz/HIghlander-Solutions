@@ -294,6 +294,16 @@ class Ui_Form_TransferSteps(QWidget, object):
             f.write("<" + timeStamp + "> Container "+container_name+" was moved from ["+str(self.transferSteps[self.transferCounter][0][0]+1)+", "+str(self.transferSteps[self.transferCounter][0][1]+1)+"] to ["+str(self.transferSteps[self.transferCounter][2][0]+1)+", "+str(self.transferSteps[self.transferCounter][2][1]+1)+"]\n")
         f.close()
 
+        if self.transferCounter == 0:
+            #print(f"[{self.transferSteps[0][0][0]},{self.transferSteps[0][0][1]}]")
+            print(self.transferSteps[0][1])
+            if self.transferSteps[0][1] == "truck":
+                self.total_transfer_cost = self.total_transfer_cost + 2
+            elif self.transferSteps[0][1] == "buffer":
+                self.total_transfer_cost = self.total_transfer_cost + 4 + abs(9 - self.transferSteps[0][0][0]) + abs(1 - self.transferSteps[0][0][1])
+            else:
+                self.total_transfer_cost = self.total_transfer_cost + abs(9 - self.transferSteps[0][0][0]) + abs(1 - self.transferSteps[0][0][1])
+
         self.transferCounter = self.transferCounter + 1
         if self.transferCounter >= len(self.transferSteps):
             self.pushButton_next.hide()
