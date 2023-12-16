@@ -10,6 +10,7 @@ class Node:
     self.parent = parent
     self.g = g
     self.h = h
+    self.cost = self.g + self.h
 
   def f(self):
     return self.g + self.h
@@ -372,7 +373,7 @@ def uniform_cost(problem):
 def a_star(problem):
   maxLength = 0
   root = Node(problem, None, 0, 0)
-  frontier = {root}
+  frontier = [root]
   explored = set()
   
   while frontier:
@@ -449,22 +450,23 @@ def a_star(problem):
       if new_state is None:
         continue
       
-      new_node = Node(new_state, current_node, 0, 0)
+      new_node = Node(new_state, current_node)
       new_node.g = current_node.g + 1
       new_node.h = problem.heuristic(new_node, i)
+      new_node.cost = new_node.g + new_node.h
       
       if new_node in explored:
         continue
 
-      if new_node in frontier:
+      if any(node.state == new_node.state for node in frontier):
         frontier_node = next(node for node in frontier if node.state == new_node.state)
-        if new_node.f() < frontier_node.f():
+        if new_node.cost < frontier_node.cost:
           frontier.remove(frontier_node)
-          frontier.add(new_node)
+          frontier.append(new_node)
       else:
-        frontier.add(new_node)
+        frontier.append(new_node)
               
-  return None, maxLength          
+  return None, maxLength
 
 # Method that calls AI algorithm on problem
 # Needs fileName, list of strings of offLoad,

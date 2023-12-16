@@ -240,6 +240,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
             self.total_balance_cost = self.total_balance_cost + self.balanceSteps[self.balanceCounter][4]
 
     def remove_done(self):
+        
         if len(self.balanceSteps) == 1:
             # Set old coords to grey
             self.tableWidget.item(8-self.balanceSteps[self.balanceCounter][0][0], self.balanceSteps[self.balanceCounter][0][1]).setBackground(QtGui.QColor(169,169,169))
