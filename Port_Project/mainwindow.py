@@ -3,13 +3,15 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from login import *
 from ship_grid import *
 from ai import *
-from add_containers import*
+from transferSteps import *
+from add_containers import *
 from balanceSteps import *
 from grid_balance import *
 from aStar_balance import *
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from datetime import datetime
 import re
+import os
 
 class Ui_MainWindow(QMainWindow):
     def __init__(self):
@@ -19,8 +21,49 @@ class Ui_MainWindow(QMainWindow):
         self.resize(803, 600)
         self.setWindowTitle("MainWindow")
         self.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.rect().center())
-        self.setupUi()
+        self.saveStatecounter = 0
+        if self.load_state() == False:
+            self.setupUi()
+        
 
+    def load_state(self):
+        if os.stat("save_state.txt").st_size == 0:
+            return False
+        else:
+            f = open("save_state.txt", "r")
+            # Names
+            line = f.readline()
+            names = line.split()
+            # Weights
+            line = f.readline()
+            weights_str = line.split()
+            weights = list(map(int, weights_str))
+            # Coords
+            line = f.readline()
+            coords = line.split()
+            # Filename
+            line = f.readline()
+            fileName = line.split("\n")[0]
+            # Containers Add
+            line = f.readline()
+            containersAdd = line.split()
+            # Containers Remove
+            line = f.readline()
+            containersRemove = line.split()
+
+            f.close()
+
+            self.add_containers = addContainers_Ui_Form(self)
+            self.add_containers.container_names = names
+            self.add_containers.weights = weights
+            self.add_containers.coords = coords
+            self.add_containers.fileName = fileName
+            self.add_containers.containers_add = containersAdd
+            self.add_containers.containers_remove = containersRemove
+            
+            self.add_containers.coord_solution_steps = driver(self.add_containers.fileName, self.add_containers.containers_remove, self.add_containers.containers_add)
+            self.add_containers.coord_solution_steps.pop(0)
+            self.add_containers.populatetransferSteps()
 
     def setupUi(self):
 
@@ -244,6 +287,27 @@ class Ui_MainWindow(QMainWindow):
         self.balanceSteps.weights = self.weights
         self.balanceSteps.coords = self.coords
         self.balanceSteps.fileName = self.fileName
+
+        f = open("save_state.txt", "w")
+        for name in self.container_names:
+            f.write(name + " ")
+        f.write("\n")
+        for weight in self.weights:
+            f.write(str(weight) + " ")
+        f.write("\n")
+        for coord in self.coords:
+            f.write(coord + " ")
+        f.write("\n")
+        f.write(self.fileName)
+        f.write("\n")
+        for container in self.containers_add:
+            f.write(container + " ")
+        f.write("\n")
+        for container in self.containers_remove:
+            f.write(container + " ")
+        f.write("\n")
+        
+        f.close()
 
         # Set color of ship grid cells based on NAN, Unused, or Used
         i = 0

@@ -83,7 +83,6 @@ class addContainers_Ui_Form(QWidget, object):
         self.weights = []
         self.container_names = []
         self.coord_solution_steps = []
-
         # AI Algo needs file to process 2D arrays
         self.fileName = ""
 
@@ -177,6 +176,28 @@ class addContainers_Ui_Form(QWidget, object):
         self.transferSteps.coords = self.coords
         self.transferSteps.fileName = self.fileName
 
+        # Save State (Initial Sa)
+        f = open("save_state.txt", "w")
+        for name in self.container_names:
+            f.write(name + " ")
+        f.write("\n")
+        for weight in self.weights:
+            f.write(str(weight) + " ")
+        f.write("\n")
+        for coord in self.coords:
+            f.write(coord + " ")
+        f.write("\n")
+        f.write(self.fileName)
+        f.write("\n")
+        for container in self.containers_add:
+            f.write(container + " ")
+        f.write("\n")
+        for container in self.containers_remove:
+            f.write(container + " ")
+        f.write("\n")
+        
+        f.close()
+        
         # Set color of ship grid cells based on NAN, Unused, or Used
         i = 0
         for row in range (8,0,-1):
@@ -215,6 +236,8 @@ class addContainers_Ui_Form(QWidget, object):
         self.transferSteps.tableWidget_truck.item(0, 0).setBackground(QtGui.QColor(169,169,169))
         # Set unused cells to unclickable
         self.transferSteps.tableWidget_truck.item(0, 0).setFlags(QtCore.Qt.ItemIsEnabled)
+
+        print(self.coord_solution_steps)
 
         if self.coord_solution_steps[0][1]=="truck":
             self.transferSteps.tableWidget_truck.item(0, 0).setText(self.containers_add[0])

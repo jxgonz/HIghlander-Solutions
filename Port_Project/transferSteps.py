@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import *
+# from mainwindow import *
 from login import *
 from inputWeight import *
 from add_logComment import *
@@ -100,6 +101,7 @@ class Ui_Form_TransferSteps(QWidget, object):
         self.weights = []
         self.coords = []
         self.transferCounter = 0
+        
         self.transferSteps = []
         self.total_transfer_cost = 0
         self.commentWindow = None
@@ -237,6 +239,10 @@ class Ui_Form_TransferSteps(QWidget, object):
         self.commentWindow.show()
 
     def next_step(self):
+        # Counter Save state
+        if self.transferCounter is None:
+            self.transferCounter = 0
+        
         self.tableWidget_truck.item(0, 0).setBackground(QtGui.QColor(169,169,169))
         self.tableWidget_truck.item(0, 0).setText("")
         # If old coords are from the truck, set truck widget to grey
@@ -329,8 +335,11 @@ class Ui_Form_TransferSteps(QWidget, object):
                 self.tableWidget.item(9-self.transferSteps[self.transferCounter][2][0], self.transferSteps[self.transferCounter][2][1]-1).setBackground(QtGui.QColor(255,0,0))
                 # Add to total cost
                 self.total_transfer_cost = self.total_transfer_cost + self.transferSteps[self.transferCounter][4]
-
+        
     def remove_done(self):
+        # Writing and updating Save State
+        f = open("save_state.txt", "w").close()
+        
         # If add container window is not open, open it
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Information)
