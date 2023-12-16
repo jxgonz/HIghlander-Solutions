@@ -295,8 +295,6 @@ class Ui_Form_TransferSteps(QWidget, object):
         f.close()
 
         if self.transferCounter == 0:
-            #print(f"[{self.transferSteps[0][0][0]},{self.transferSteps[0][0][1]}]")
-            print(self.transferSteps[0][1])
             if self.transferSteps[0][1] == "truck":
                 self.total_transfer_cost = self.total_transfer_cost + 2
             elif self.transferSteps[0][1] == "buffer":

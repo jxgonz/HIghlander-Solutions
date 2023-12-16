@@ -108,3 +108,15 @@
 <12/15/2023 17:48> Container bat was moved from [10, 2] to [3, 2]
 <12/15/2023 17:48> Container Cat was moved from [2, 3] to [truck]
 <12/15/2023 17:48> Transfer Complete!
+<12/15/2023 17:50> User uploaded a manifest
+<12/15/2023 17:50> Transfer operation in progress...
+<12/15/2023 17:50> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 17:50> Transfer Complete!
+<12/15/2023 17:51> User uploaded a manifest
+<12/15/2023 17:51> Transfer operation in progress...
+<12/15/2023 17:51> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 17:53> Transfer Complete!
+<12/15/2023 17:53> User uploaded a manifest
+<12/15/2023 17:53> Transfer operation in progress...
+<12/15/2023 17:54> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 17:54> Transfer Complete!
