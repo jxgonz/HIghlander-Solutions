@@ -496,3 +496,7 @@
 <12/15/2023 14:17> Container Bat was moved from [truck] to [3, 2]
 <12/15/2023 14:17> Container Bat was moved from [10, 2] to [3, 2]
 <12/15/2023 14:17> Transfer Complete!
+<12/15/2023 23:09> User uploaded a manifest
+<12/15/2023 23:09> Transfer operation in progress...
+<12/15/2023 23:09> Container Dog was moved from [2, 4] to [truck]
+<12/15/2023 23:09> Transfer Complete!

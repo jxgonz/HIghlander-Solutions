@@ -7,6 +7,7 @@ from inputWeight import *
 from add_logComment import *
 from add_containers import *
 from pathlib import Path
+import pathlib
 
 class Ui_Form_TransferSteps(QWidget, object):
     def __init__(self, parent, *args, **kwargs):
@@ -347,7 +348,8 @@ class Ui_Form_TransferSteps(QWidget, object):
         
     def remove_done(self):
         # Writing and updating Save State
-        f = open("save_state.txt", "w").close()
+        working_dir = str(pathlib.Path().resolve())
+        f = open(working_dir + "\save_state.txt", "w").close()
         
         # If add container window is not open, open it
         msgBox = QMessageBox()

@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from datetime import datetime
 import re
 import os
+import pathlib
 
 class Ui_MainWindow(QMainWindow):
     def __init__(self):
@@ -26,10 +27,12 @@ class Ui_MainWindow(QMainWindow):
         
 
     def load_state(self):
-        if os.stat("save_state.txt").st_size == 0:
+        working_dir = str(pathlib.Path().resolve())
+        print(working_dir + "\save_state.txt")
+        if os.stat(working_dir + "\save_state.txt").st_size == 0:
             return False
         else:
-            f = open("save_state.txt", "r")
+            f = open(working_dir + "\save_state.txt", "r")
             # Names
             line = f.readline()
             names = line.split()

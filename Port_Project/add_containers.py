@@ -6,6 +6,7 @@ from transferSteps import *
 from container import *
 from ship_grid import *
 from inputWeight import *
+import pathlib
 
 
 class addContainers_Ui_Form(QWidget, object):
@@ -196,7 +197,8 @@ class addContainers_Ui_Form(QWidget, object):
         self.transferSteps.fileName = self.fileName
 
         # Save State (Initial Sa)
-        f = open("save_state.txt", "w")
+        working_dir = str(pathlib.Path().resolve())
+        f = open(working_dir + "\save_state.txt", "w")
         for name in self.container_names:
             f.write(name + " ")
         f.write("\n")
