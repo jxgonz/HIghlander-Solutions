@@ -97,6 +97,7 @@ class Ui_Form_TransferSteps(QWidget, object):
         self.addContainerWindow = None
         self.container_names = []
         self.weights = []
+        self.weight = None
         self.coords = []
         self.balanceCounter = 0
         self.transferSteps = []
