@@ -81,6 +81,7 @@ class addContainers_Ui_Form(QWidget, object):
         self.inventory_array = []
         self.coords = []
         self.weights = []
+        self.weight = 0
         self.container_names = []
         self.coord_solution_steps = []
         # AI Algo needs file to process 2D arrays
