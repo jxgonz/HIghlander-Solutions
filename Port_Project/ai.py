@@ -472,6 +472,9 @@ def a_star(problem):
 # Needs fileName, list of strings of offLoad,
 # list of strings of onLoad containers
 def driver(fileName, offLoad, onLoad):
+  if len(offLoad) == 0 and len(onLoad) == 0:
+    return None
+
   data = pd.read_csv(fileName, header=None)
 
   data[0] = data[0].str.strip('[')
@@ -511,5 +514,5 @@ def driver(fileName, offLoad, onLoad):
 
   crane = Crane()
   problem = Problem(ship, buffer, crane, offLoad, onLoad)
-  
+
   return a_star(problem)
