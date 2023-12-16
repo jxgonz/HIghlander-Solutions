@@ -31,6 +31,8 @@ class Ui_MainWindow(QMainWindow):
             return False
         else:
             f = open("save_state.txt", "r")
+            line.f.readline()
+            operation = line
             # Names
             line = f.readline()
             names = line.split()
@@ -44,13 +46,14 @@ class Ui_MainWindow(QMainWindow):
             # Filename
             line = f.readline()
             fileName = line.split("\n")[0]
-            # Containers Add
-            line = f.readline()
-            containersAdd = line.split()
-            # Containers Remove
-            line = f.readline()
-            containersRemove = line.split()
 
+            if operation == "transfer":
+                # Containers Add
+                line = f.readline()
+                containersAdd = line.split()
+                # Containers Remove
+                line = f.readline()
+                containersRemove = line.split()
             f.close()
 
             self.add_containers = addContainers_Ui_Form(self)
@@ -58,12 +61,14 @@ class Ui_MainWindow(QMainWindow):
             self.add_containers.weights = weights
             self.add_containers.coords = coords
             self.add_containers.fileName = fileName
-            self.add_containers.containers_add = containersAdd
-            self.add_containers.containers_remove = containersRemove
-            
-            self.add_containers.coord_solution_steps = driver(self.add_containers.fileName, self.add_containers.containers_remove, self.add_containers.containers_add)
-            self.add_containers.coord_solution_steps.pop(0)
-            self.add_containers.populatetransferSteps()
+            if operation == "transfer":
+                self.add_containers.containers_add = containersAdd
+                self.add_containers.containers_remove = containersRemove
+                self.add_containers.coord_solution_steps = driver(self.add_containers.fileName, self.add_containers.containers_remove, self.add_containers.containers_add)
+                self.add_containers.coord_solution_steps.pop(0)
+                self.add_containers.populatetransferSteps()
+            else:
+                self.populateBalanceSteps
 
     def setupUi(self):
 
@@ -289,6 +294,8 @@ class Ui_MainWindow(QMainWindow):
         self.balanceSteps.fileName = self.fileName
 
         f = open("save_state.txt", "w")
+        f.write("balance")
+        f.write("\n")
         for name in self.container_names:
             f.write(name + " ")
         f.write("\n")
@@ -300,13 +307,6 @@ class Ui_MainWindow(QMainWindow):
         f.write("\n")
         f.write(self.fileName)
         f.write("\n")
-        for container in self.containers_add:
-            f.write(container + " ")
-        f.write("\n")
-        for container in self.containers_remove:
-            f.write(container + " ")
-        f.write("\n")
-        
         f.close()
 
         # Set color of ship grid cells based on NAN, Unused, or Used

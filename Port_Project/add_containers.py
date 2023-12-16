@@ -178,6 +178,8 @@ class addContainers_Ui_Form(QWidget, object):
 
         # Save State (Initial Sa)
         f = open("save_state.txt", "w")
+        f.write("transfer")
+        f.write("\n")
         for name in self.container_names:
             f.write(name + " ")
         f.write("\n")
@@ -195,7 +197,6 @@ class addContainers_Ui_Form(QWidget, object):
         for container in self.containers_remove:
             f.write(container + " ")
         f.write("\n")
-        
         f.close()
         
         # Set color of ship grid cells based on NAN, Unused, or Used
