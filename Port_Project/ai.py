@@ -10,6 +10,7 @@ class Node:
     self.parent = parent
     self.g = g
     self.h = h
+    self.cost = self.g + self.h
 
   def f(self):
     return self.g + self.h
@@ -372,79 +373,23 @@ def uniform_cost(problem):
 def a_star(problem):
   maxLength = 0
   root = Node(problem, None, 0, 0)
-  frontier = {root}
+  frontier = [root]
   explored = set()
   
-  while frontier:
-    current_node = min(frontier, key=lambda node: node.f())
-    frontier.remove(current_node)
+  frontier.sort(key = lambda x: (x.cost), reverse=True)
 
-    if problem.goal_test(current_node.state):
-        path=[]
-        test=[]
-        while current_node:
-          test.append(current_node.state.ship)
-          step=[]
-          if current_node.parent == None:
-            step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
-            step.append('ship')
-            step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
-            step.append('ship')
-            step.append(current_node.h)
-            path.append(step)
-          elif current_node.state.crane.onTruck and current_node.parent.state.crane.empty == False:
-            step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
-            step.append('ship')
-            step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
-            step.append("truck")
-            step.append(current_node.h)
-            path.append(step)
-          elif current_node.parent.state.crane.onTruck and current_node.parent.state.crane.empty == False:
-            step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
-            step.append("truck")
-            step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
-            step.append('ship')
-            step.append(current_node.h)
-            path.append(step)
-          elif current_node.state.crane.inBuffer and current_node.parent.state.crane.inBuffer and current_node.parent.state.crane.empty == False:
-            step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
-            step.append('buffer')
-            step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
-            step.append('buffer')
-            step.append(current_node.h)
-            path.append(step)
-          elif current_node.state.crane.inBuffer and current_node.parent.state.crane.empty == False:
-            step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
-            step.append('ship')
-            step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
-            step.append('buffer')
-            step.append(current_node.h)
-            path.append(step)
-          elif current_node.parent.state.crane.inBuffer and current_node.parent.state.crane.empty == False:
-            step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
-            step.append('buffer')
-            step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
-            step.append('ship')
-            step.append(current_node.h)
-            path.append(step)
-          else:
-            if current_node.parent.state.crane.empty == False:
-              step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
-              step.append('ship')
-              step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
-              step.append('ship')
-              step.append(current_node.h)
-              path.append(step)
-          current_node = current_node.parent
-          
-        path.reverse()
-        test.reverse()
-        return path
+  while frontier:
+    current_node = min(frontier, key=lambda node: node.cost)
+    frontier.remove(current_node)
     
     explored.add(current_node)
     
     for i in range(7):
       new_state = problem.apply_operator(i, current_node.state)
+      # if new_state is None:
+      #   print("None")
+      # else:
+      #   print(np.matrix(new_state.ship))
       
       if new_state is None:
         continue
@@ -452,17 +397,80 @@ def a_star(problem):
       new_node = Node(new_state, current_node, 0, 0)
       new_node.g = current_node.g + 1
       new_node.h = problem.heuristic(new_node, i)
+      new_node.cost = new_node.g + new_node.h
       
       if new_node in explored:
         continue
 
       if new_node in frontier:
         frontier_node = next(node for node in frontier if node.state == new_node.state)
-        if new_node.f() < frontier_node.f():
+        if new_node.cost < frontier_node.cost:
           frontier.remove(frontier_node)
-          frontier.add(new_node)
+          frontier.append(new_node)
       else:
-        frontier.add(new_node)
+        frontier.append(new_node)
+        
+    if problem.goal_test(current_node.state):
+          path=[]
+          test=[]
+          while current_node:
+            test.append(current_node.state.ship)
+            step=[]
+            if current_node.parent == None:
+              step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
+              step.append('ship')
+              step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
+              step.append('ship')
+              step.append(current_node.h)
+              path.append(step)
+            elif current_node.state.crane.onTruck and current_node.parent.state.crane.empty == False:
+              step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
+              step.append('ship')
+              step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
+              step.append("truck")
+              step.append(current_node.h)
+              path.append(step)
+            elif current_node.parent.state.crane.onTruck and current_node.parent.state.crane.empty == False:
+              step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
+              step.append("truck")
+              step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
+              step.append('ship')
+              step.append(current_node.h)
+              path.append(step)
+            elif current_node.state.crane.inBuffer and current_node.parent.state.crane.inBuffer and current_node.parent.state.crane.empty == False:
+              step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
+              step.append('buffer')
+              step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
+              step.append('buffer')
+              step.append(current_node.h)
+              path.append(step)
+            elif current_node.state.crane.inBuffer and current_node.parent.state.crane.empty == False:
+              step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
+              step.append('ship')
+              step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
+              step.append('buffer')
+              step.append(current_node.h)
+              path.append(step)
+            elif current_node.parent.state.crane.inBuffer and current_node.parent.state.crane.empty == False:
+              step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
+              step.append('buffer')
+              step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
+              step.append('ship')
+              step.append(current_node.h)
+              path.append(step)
+            else:
+              if current_node.parent.state.crane.empty == False:
+                step.append([current_node.parent.state.crane.coordinates[0] + 1, current_node.parent.state.crane.coordinates[1] + 1])
+                step.append('ship')
+                step.append([current_node.state.crane.coordinates[0] + 1, current_node.state.crane.coordinates[1] + 1])
+                step.append('ship')
+                step.append(current_node.h)
+                path.append(step)
+            current_node = current_node.parent
+            
+          path.reverse()
+          test.reverse()
+          return path
               
   return None, maxLength          
 
