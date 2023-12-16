@@ -179,8 +179,6 @@ class addContainers_Ui_Form(QWidget, object):
 
         # Save State (Initial Sa)
         f = open("save_state.txt", "w")
-        f.write("transfer")
-        f.write("\n")
         for name in self.container_names:
             f.write(name + " ")
         f.write("\n")

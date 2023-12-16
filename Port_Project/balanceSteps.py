@@ -240,8 +240,6 @@ class Ui_Form_BalanceSteps(QWidget, object):
             self.total_balance_cost = self.total_balance_cost + self.balanceSteps[self.balanceCounter][4]
 
     def remove_done(self):
-        # Writing and updating Save State
-        f = open("save_state.txt", "w").close()
         
         if len(self.balanceSteps) == 1:
             # Set old coords to grey

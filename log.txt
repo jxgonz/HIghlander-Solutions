@@ -78,4 +78,75 @@
 <12/15/2023 19:54> Container Cat was moved from [2, 3] to [truck]
 <12/15/2023 19:54> Transfer Complete!
 <12/15/2023 19:55> User uploaded a manifest
-<12/15/2023 19:55> Balancing operation in progress...
+<12/15/2023 19:55> Balancing operation in progress...<12/15/2023 20:20> User uploaded a manifest
+<12/15/2023 20:20> Balancing operation in progress...
+<12/15/2023 20:28> User uploaded a manifest
+<12/15/2023 20:28> Balancing operation in progress...
+<12/15/2023 20:32> User uploaded a manifest
+<12/15/2023 20:32> Balancing operation in progress...
+<12/15/2023 20:33> User uploaded a manifest
+<12/15/2023 20:33> Transfer operation in progress...
+<12/15/2023 20:33> User entered weight for loading container as: [234]
+<12/15/2023 20:33> Container Bat was moved from [truck] to [4, 2]
+<12/15/2023 20:33> Container Bat was moved from [10, 2] to [4, 2]
+<12/15/2023 20:33> Container Doe was moved from [3, 3] to [3, 4]
+<12/15/2023 20:33> User entered weight for loading container as: [1230]
+<12/15/2023 20:33> Container Rat was moved from [truck] to [5, 2]
+<12/15/2023 20:33> Container Rat was moved from [10, 2] to [5, 2]
+<12/15/2023 20:34> Container Cow was moved from [2, 3] to [truck]
+<12/15/2023 20:34> Transfer Complete!
+<12/15/2023 20:36> User uploaded a manifest
+<12/15/2023 20:36> Transfer operation in progress...
+<12/15/2023 20:37> User uploaded a manifest
+<12/15/2023 20:37> Transfer operation in progress...
+<12/15/2023 20:38> User uploaded a manifest
+<12/15/2023 20:38> Transfer operation in progress...
+<12/15/2023 20:38> User uploaded a manifest
+<12/15/2023 20:38> Transfer operation in progress...
+<12/15/2023 20:39> Container Doe was moved from [3, 3] to [3, 4]
+<12/15/2023 20:39> User entered weight for loading container as: [1230]
+<12/15/2023 20:39> Container Rat was moved from [truck] to [4, 2]
+<12/15/2023 20:39> Container Rat was moved from [10, 2] to [4, 2]
+<12/15/2023 20:39> Container Bat was moved from [truck] to [5, 2]
+<12/15/2023 20:39> Container Bat was moved from [10, 2] to [5, 2]
+<12/15/2023 20:39> Container Cow was moved from [2, 3] to [truck]
+<12/15/2023 20:39> Transfer Complete!
+<12/15/2023 20:39> User uploaded a manifest
+<12/15/2023 20:39> Transfer operation in progress...
+<12/15/2023 20:39> Container Doe was moved from [3, 3] to [3, 4]
+<12/15/2023 20:39> User entered weight for loading container as: [1230]
+<12/15/2023 20:39> Container Rat was moved from [truck] to [4, 2]
+<12/15/2023 20:39> Container Rat was moved from [10, 2] to [4, 2]
+<12/15/2023 20:39> Container Bat was moved from [truck] to [5, 2]
+<12/15/2023 20:39> Container Bat was moved from [10, 2] to [5, 2]
+<12/15/2023 20:39> Container Cow was moved from [2, 3] to [truck]
+<12/15/2023 20:39> Transfer Complete!
+<12/15/2023 20:52> User uploaded a manifest
+<12/15/2023 20:52> Balancing operation in progress...
+<12/15/2023 20:53> User uploaded a manifest
+<12/15/2023 20:53> Balancing operation in progress...
+<12/15/2023 20:54> User uploaded a manifest
+<12/15/2023 20:54> Balancing operation in progress...
+<12/15/2023 21:03> User uploaded a manifest
+<12/15/2023 21:03> Balancing operation in progress...
+<12/15/2023 21:03> Container Cat was moved from [1, 2] to [1, 7]
+<12/15/2023 21:03> Balancing Complete!
+<12/15/2023 21:04> User uploaded a manifest
+<12/15/2023 21:04> Balancing operation in progress...
+<12/15/2023 21:39> User uploaded a manifest
+<12/15/2023 21:39> Transfer operation in progress...
+<12/15/2023 21:39> User entered weight for loading container as: [400]
+<12/15/2023 21:39> Container Bat was moved from [truck] to [3, 2]
+<12/15/2023 21:39> Container Bat was moved from [10, 2] to [3, 2]
+<12/15/2023 21:39> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 21:39> Container Dog was moved from [2, 4] to [truck]
+<12/15/2023 21:39> Transfer Complete!
+<12/15/2023 21:39> User uploaded a manifest
+<12/15/2023 21:39> Transfer operation in progress...
+<12/15/2023 21:40> User entered weight for loading container as: [400]
+<12/15/2023 21:40> User entered weight for loading container as: [400]
+<12/15/2023 21:40> Container Bat was moved from [truck] to [3, 2]
+<12/15/2023 21:40> Container Bat was moved from [10, 2] to [3, 2]
+<12/15/2023 21:40> Container Cat was moved from [2, 3] to [truck]
+<12/15/2023 21:40> Container Dog was moved from [2, 4] to [truck]
+<12/15/2023 21:40> Transfer Complete!
