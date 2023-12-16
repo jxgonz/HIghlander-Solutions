@@ -175,3 +175,18 @@
 <12/15/2023 22:12> Transfer operation in progress...
 <12/15/2023 22:12> Container Dog was moved from [2, 4] to [truck]
 <12/15/2023 22:12> Transfer Complete!
+<12/15/2023 22:29> User uploaded a manifest
+<12/15/2023 22:29> Transfer operation in progress...
+<12/15/2023 22:29> Container Dog was moved from [2, 4] to [truck]
+<12/15/2023 22:29> Transfer Complete!
+<12/15/2023 22:29> User uploaded a manifest
+<12/15/2023 22:29> Transfer operation in progress...
+<12/15/2023 22:30> User entered weight for loading container as: [234]
+<12/15/2023 22:30> Container asd was moved from [truck] to [3, 2]
+<12/15/2023 22:30> Container asd was moved from [10, 2] to [3, 2]
+<12/15/2023 22:30> Container Dog was moved from [2, 4] to [truck]
+<12/15/2023 22:30> Transfer Complete!
+<12/15/2023 22:32> User uploaded a manifest
+<12/15/2023 22:32> Transfer operation in progress...
+<12/15/2023 22:32> Container Dog was moved from [2, 4] to [truck]
+<12/15/2023 22:32> Transfer Complete!

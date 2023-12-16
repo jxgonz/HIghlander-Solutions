@@ -143,7 +143,7 @@ class Ui_Form_TransferSteps(QWidget, object):
         self.label_shipInventory.setFont(font)
         self.label_shipInventory.setAlignment(QtCore.Qt.AlignCenter)
         self.label_shipInventory.setObjectName("label_shipInventory")
-        self.label_shipInventory.setText("Balancing Steps")
+        self.label_shipInventory.setText("Transfer Steps")
 
         #Adding label for Ship Grid
         self.label_shipGrid = QtWidgets.QLabel(self)
@@ -223,11 +223,11 @@ class Ui_Form_TransferSteps(QWidget, object):
             # Reverse lookup the index of the coordinate since
             # these arrays are parallel. That way we can just call
             # the container name from that coordinates index!
-            print(coord)
+            # print(coord)
             strIndex = self.coords.index(coord)
             containerStr = self.container_names[strIndex]
             containerStrs.append(containerStr)
-        print(containerStrs)
+        # print(containerStrs)
         return containerStrs
 
     def addComment_clicked(self):

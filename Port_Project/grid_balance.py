@@ -305,16 +305,16 @@ class Grid:
         lines = []
         for row in reversed(self.inventory_array):
             lines.append(' '.join(str(container.name) for container in row))
-        print('\n'.join(lines))
-        print()
+        # print('\n'.join(lines))
+        # print()
 
     #Grid print of the weights
     def printGridWeights(self):
         lines = []
         for row in reversed(self.inventory_array):
             lines.append(' '.join(str(container.weight) for container in row))
-        print('\n'.join(lines))
-        print()
+        # print('\n'.join(lines))
+        # print()
 
     def valid_move(self, col):
             response = [False, None, None, None]

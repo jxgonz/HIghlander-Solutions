@@ -167,7 +167,7 @@ class addContainers_Ui_Form(QWidget, object):
             msgBox.close()
             self.coord_solution_steps=driver(self.fileName, self.containers_remove, self.containers_add)
             self.coord_solution_steps.pop(0)
-            print(self.coord_solution_steps)
+            # print(self.coord_solution_steps)
             if self.coord_solution_steps is None:
                 msgBox = QMessageBox()
                 msgBox.setIcon(QMessageBox.Critical)
@@ -255,7 +255,7 @@ class addContainers_Ui_Form(QWidget, object):
         # Set unused cells to unclickable
         self.transferSteps.tableWidget_truck.item(0, 0).setFlags(QtCore.Qt.ItemIsEnabled)
 
-        print(self.coord_solution_steps)
+        # print(self.coord_solution_steps)
 
         if self.coord_solution_steps[0][1]=="truck":
             self.transferSteps.tableWidget_truck.item(0, 0).setText(self.containers_add[0])

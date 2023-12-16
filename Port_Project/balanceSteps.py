@@ -178,11 +178,11 @@ class Ui_Form_BalanceSteps(QWidget, object):
             # Reverse lookup the index of the coordinate since
             # these arrays are parallel. That way we can just call
             # the container name from that coordinates index!
-            print(coord)
+            # print(coord)
             strIndex = self.coords.index(coord)
             containerStr = self.container_names[strIndex]
             containerStrs.append(containerStr)
-        print(containerStrs)
+        # print(containerStrs)
         return containerStrs
 
     def addComment_clicked(self):
@@ -287,7 +287,7 @@ class Ui_Form_BalanceSteps(QWidget, object):
         msgBox.setWindowTitle("Balancing Complete")
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec()
-        self.printNewManifest()
+        # self.printNewManifest()
         self.close()
 
     def printNewManifest(self):
